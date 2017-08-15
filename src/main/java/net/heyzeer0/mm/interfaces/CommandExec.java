@@ -1,6 +1,5 @@
 package net.heyzeer0.mm.interfaces;
 
-import net.heyzeer0.mm.exception.CommandMessage;
 import org.bukkit.entity.Player;
 
 /**
@@ -9,6 +8,6 @@ import org.bukkit.entity.Player;
  */
 public interface CommandExec {
 
-    void runCommand(Player m, String args[]) throws CommandMessage;
+    void runCommand(Player m, String args[]);
 
 }

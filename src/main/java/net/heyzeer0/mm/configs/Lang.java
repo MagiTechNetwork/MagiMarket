@@ -10,6 +10,7 @@ import net.heyzeer0.mm.interfaces.annotation.LangHelper;
 public class Lang {
 
     public static String command_list_format = " §7-§e %s §7=§a %s";
+    public static String command_no_permission = "§cVocê não possui permissão para realizar este comando.";
     public static String command_help_description = "Lista todos os comandos.";
     public static String command_help_prefix = "§d§lMagi§a§lMarket §6>> Comandos de ajuda";
     public static String command_config_description = "Permite recarregar configurações";

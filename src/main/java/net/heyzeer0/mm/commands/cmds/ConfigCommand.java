@@ -1,7 +1,6 @@
 package net.heyzeer0.mm.commands.cmds;
 
 import net.heyzeer0.mm.configs.MainConfig;
-import net.heyzeer0.mm.exception.CommandMessage;
 import net.heyzeer0.mm.interfaces.CommandExec;
 import net.heyzeer0.mm.interfaces.annotation.Command;
 import net.heyzeer0.mm.configs.Lang;
@@ -16,7 +15,7 @@ import org.bukkit.entity.Player;
 public class ConfigCommand implements CommandExec {
 
     @Override
-    public void runCommand(Player m, String[] args) throws CommandMessage {
+    public void runCommand(Player m, String[] args) {
         if(args.length <= 1) {
             m.sendMessage(Lang.command_config_prefix);
             m.sendMessage(String.format(Lang.command_list_format, "Main", Lang.command_config_maincfg_description));

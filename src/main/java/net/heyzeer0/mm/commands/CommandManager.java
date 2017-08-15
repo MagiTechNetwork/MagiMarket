@@ -2,8 +2,8 @@ package net.heyzeer0.mm.commands;
 
 import net.heyzeer0.mm.commands.cmds.ConfigCommand;
 import net.heyzeer0.mm.commands.cmds.HelpCommand;
+import net.heyzeer0.mm.configs.Lang;
 import net.heyzeer0.mm.configs.MainConfig;
-import net.heyzeer0.mm.exception.CommandMessage;
 import net.heyzeer0.mm.interfaces.CommandExec;
 import net.heyzeer0.mm.interfaces.annotation.Command;
 import net.heyzeer0.mm.profiles.CommandProfile;
@@ -36,13 +36,10 @@ public class CommandManager {
         if(cmds.containsKey(args[0])) {
             CommandProfile prf = cmds.get(args[0]);
             if(!sender.hasPermission(prf.getAnnotation().permission())) {
-                //sendmsg
+                sender.sendMessage(Lang.command_no_permission);
+                return true;
             }
-            try{
-                prf.getExecutor().runCommand(sender, args);
-            }catch (CommandMessage msg) {
-                //sendmsg
-            }
+            prf.getExecutor().runCommand(sender, args);
             return true;
         }
         return false;

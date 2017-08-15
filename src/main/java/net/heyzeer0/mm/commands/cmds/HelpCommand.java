@@ -2,7 +2,6 @@ package net.heyzeer0.mm.commands.cmds;
 
 import net.heyzeer0.mm.commands.CommandManager;
 import net.heyzeer0.mm.configs.MainConfig;
-import net.heyzeer0.mm.exception.CommandMessage;
 import net.heyzeer0.mm.interfaces.CommandExec;
 import net.heyzeer0.mm.interfaces.annotation.Command;
 import net.heyzeer0.mm.configs.Lang;
@@ -18,7 +17,7 @@ import org.bukkit.entity.Player;
 public class HelpCommand implements CommandExec {
 
     @Override
-    public void runCommand(Player m, String[] args) throws CommandMessage {
+    public void runCommand(Player m, String[] args) {
         m.sendMessage(Lang.command_help_prefix);
         System.out.println(args);
         for(String pr : CommandManager.cmds.keySet()) {
