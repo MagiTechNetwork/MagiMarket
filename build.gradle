@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
+group 'net.heyzeeere0.mm'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.rethinkdb:rethinkdb-driver:2.3.3'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.0.pr1'
+    compile 'org.json:json:20170516'
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+shadowJar.archiveName = 'MagiMarket-1.0.jar'
