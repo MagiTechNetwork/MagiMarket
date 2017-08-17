@@ -49,9 +49,16 @@ public class Main extends JavaPlugin {
             ex.printStackTrace();
         }
 
-        data = new MarketData();
-
         //Database
+        try{
+            data = new MarketData();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            getLogger().log(Level.SEVERE, "An error ocurred while trying to connect to the database.");
+            return;
+        }
+
+        //Cmds
         CommandManager.registerCommands();
     }
 

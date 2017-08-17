@@ -2,6 +2,8 @@ package net.heyzeer0.mm.database.manager;
 
 import com.rethinkdb.net.Connection;
 import net.heyzeer0.mm.database.entities.MarketProfile;
+import net.heyzeer0.mm.database.entities.UserProfile;
+import org.bukkit.entity.Player;
 
 import static com.rethinkdb.RethinkDB.r;
 
@@ -20,6 +22,11 @@ public class DatabaseManager {
             r.tableCreate("users").run(conn);
             r.tableCreate("listings").run(conn);
         }catch (Exception ignored) {}
+    }
+
+    public UserProfile getUserProfile(Player p) {
+        UserProfile data = r.table(UserProfile.DB_TABLE).get(p.getUniqueId()).run(conn, UserProfile.class);
+        return data != null ? data : new UserProfile(p);
     }
 
     public MarketProfile getServerMarket(String name) {
