@@ -118,15 +118,20 @@ public class ConfigManager {
             boolean save = false;
 
             for(Field fd : x.getFields()) {
+                if(!config.contains(fd.getName())) {
+                    config.set(fd.getName(), fd.get(null));
+                    save = true;
+                }
                 if(fd.get(null).getClass() == String.class) {
-                    if(!config.contains(fd.getName())) {
-                        config.set(fd.getName(), fd.get(null));
-                        save = true;
-                    }
                     fd.set(null, config.getString(fd.getName()));
                 }
+                if(fd.get(null).getClass() == int.class) {
+                    fd.set(null, config.getInt(fd.getName()));
+                }
+                if(fd.get(null).getClass() == Integer.class) {
+                    fd.set(null, config.getInt(fd.getName()));
+                }
             }
-
             if(save) {
                 config.save(config_file);
             }

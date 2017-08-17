@@ -31,4 +31,22 @@ public class Utils {
         return x;
     }
 
+    public static ItemStack getCustomItem(ItemStack i, List<String> lore) {
+        ItemStack x = i.clone();
+        ItemMeta y = x.getItemMeta();
+        y.setLore(lore);
+        x.setItemMeta(y);
+
+        return x;
+    }
+
+    public static ItemStack getCustomItem(ItemStack i, String name) {
+        ItemStack x = i.clone();
+        ItemMeta y = x.getItemMeta();
+        y.setDisplayName(name);
+        x.setItemMeta(y);
+
+        return x;
+    }
+
 }

@@ -25,7 +25,7 @@ public class DatabaseManager {
     }
 
     public UserProfile getUserProfile(Player p) {
-        UserProfile data = r.table(UserProfile.DB_TABLE).get(p.getUniqueId()).run(conn, UserProfile.class);
+        UserProfile data = r.table(UserProfile.DB_TABLE).get(p.getUniqueId().toString()).run(conn, UserProfile.class);
         return data != null ? data : new UserProfile(p);
     }
 

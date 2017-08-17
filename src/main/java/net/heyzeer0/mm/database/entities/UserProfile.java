@@ -21,16 +21,16 @@ public class UserProfile implements ManagedObject {
 
     public static final String DB_TABLE = "users";
 
-    UUID UUID;
+    String uuid;
     ArrayList<MarketAnnounce> announceList = new ArrayList<>();
 
     public UserProfile(Player p) {
-        UUID = p.getUniqueId();
+        uuid = p.getUniqueId().toString();
     }
 
-    @ConstructorProperties({"UUID", "announceList"})
-    public UserProfile(UUID uuid, ArrayList<MarketAnnounce> announceList) {
-        this.UUID = uuid;
+    @ConstructorProperties({"uuid", "announceList"})
+    public UserProfile(String uuid, ArrayList<MarketAnnounce> announceList) {
+        this.uuid = uuid;
         this.announceList = announceList;
     }
 
@@ -56,7 +56,7 @@ public class UserProfile implements ManagedObject {
 
     @Override
     public void delete() {
-        r.table(DB_TABLE).get(getUUID()).delete().runNoReply(Main.getData().conn);
+        r.table(DB_TABLE).get(uuid).delete().runNoReply(Main.getData().conn);
     }
 
     @Override

@@ -104,7 +104,7 @@ public class MarketGUI {
             return;
         }
         if(e.getSlot() == 45) {
-            main_buttom.getEx().userClicked(e);
+            left_corner.getEx().userClicked(e);
             return;
         }
 

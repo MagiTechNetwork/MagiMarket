@@ -41,9 +41,6 @@ public class MarketProfile implements ManagedObject {
         if(announceList.contains(ann)) {
             return false;
         }
-        if(!ann.isActive()) {
-            return false;
-        }
         announceList.add(ann);
         saveAsync();
         return true;
@@ -52,9 +49,6 @@ public class MarketProfile implements ManagedObject {
     @JsonIgnore
     public boolean removeMarketAnnounce(MarketAnnounce ann) {
         if(!announceList.contains(ann)) {
-            return false;
-        }
-        if(ann.isActive()) {
             return false;
         }
         announceList.remove(ann);

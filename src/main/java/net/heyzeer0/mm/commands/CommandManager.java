@@ -7,6 +7,7 @@ import net.heyzeer0.mm.configs.Lang;
 import net.heyzeer0.mm.configs.MainConfig;
 import net.heyzeer0.mm.gui.MarketGUI;
 import net.heyzeer0.mm.gui.MarketManager;
+import net.heyzeer0.mm.gui.guis.GlobalGUI;
 import net.heyzeer0.mm.interfaces.CommandExec;
 import net.heyzeer0.mm.interfaces.annotation.Command;
 import net.heyzeer0.mm.profiles.CommandProfile;
@@ -55,15 +56,7 @@ public class CommandManager {
             public boolean execute(CommandSender commandSender, String s, String[] strings) {
                 if(commandSender instanceof Player) {
                     if(strings.length <= 0) {
-                        MarketGUI gui = new MarketGUI("MagiMarket - Anuncios");
-                        gui.setMainButtom(Utils.getCustomItem(Material.GRASS, 1, "§2> Anuncios Publicos"), event -> {event.getWhoClicked().closeInventory();});
-                        gui.setLeftCorner(Utils.getCustomItem(Material.ENDER_CHEST, 1, "§e> Seu Estoque"), event -> {event.getWhoClicked().closeInventory();});
-
-                        for(int i = 0; i <= 36; i++) {
-                            gui.addItem(Utils.getCustomItem(Material.ANVIL, 64, "§8A bigorna.png"), e -> {});
-                        }
-
-                        MarketManager.openGui((Player)commandSender, gui);
+                        GlobalGUI.openGui((Player)commandSender);
                         return true;
                     }
                     if(!handleCommand((Player)commandSender, strings)) {
