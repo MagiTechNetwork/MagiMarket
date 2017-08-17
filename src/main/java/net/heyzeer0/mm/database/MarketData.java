@@ -32,7 +32,7 @@ public class MarketData {
     }
 
     public static void queue(Runnable runnable) {
-        Bukkit.getScheduler().runTaskAsynchronously(Main.main, runnable::run);
+        Bukkit.getScheduler().runTaskAsynchronously(Main.main, runnable);
     }
 
 }

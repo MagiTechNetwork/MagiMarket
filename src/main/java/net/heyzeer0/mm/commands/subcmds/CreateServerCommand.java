@@ -14,13 +14,13 @@ import org.bukkit.inventory.ItemStack;
  * Created by HeyZeer0 on 17/08/2017.
  * Copyright © HeyZeer0 - 2016
  */
-@Command(name = "create", permission = "magimarket.cmd.create", description = "Crie um novo anuncio com o item na sua mão")
-public class CreateCommand implements CommandExec {
+@Command(name = "createserver", permission = "magimarket.cmd.createserver", description = "Crie um novo anuncio no servidor com o item na sua mão")
+public class CreateServerCommand implements CommandExec {
 
     @Override
     public void runCommand(Player m, String[] args) {
-        if(args.length < 3) {
-            m.sendMessage("§cUse: /" + MainConfig.main_command_prefix + " create [quantidade] [preço]");
+        if(args.length < 4) {
+            m.sendMessage("§cUse: /" + MainConfig.main_command_prefix + " create [quantidade] [preço] [vender]");
             return;
         }
         if(m.getItemInHand() == null) {
@@ -31,6 +31,7 @@ public class CreateCommand implements CommandExec {
         try{
             Integer amount = Integer.valueOf(args[1]);
             Integer price = Integer.valueOf(args[2]);
+            Boolean vender = Boolean.valueOf(args[3]);
 
             if(amount >= 64) {
                 m.sendMessage("§cA quantidade não pode exceder uma stack!");
@@ -57,12 +58,11 @@ public class CreateCommand implements CommandExec {
 
             x.setAmount(amount);
 
-            MarketAnnounce announce = new MarketAnnounce(amount, new WrappedStack(x), price, m.getUniqueId(), false, false, amount, System.currentTimeMillis(), true);
+            MarketAnnounce announce = new MarketAnnounce(amount, new WrappedStack(x), price, m.getUniqueId(), true, vender, amount, System.currentTimeMillis(), true);
             AnnounceProfile ann = new AnnounceProfile(announce);
             ann.save();
 
-            Main.getData().db().getUserProfile(m).addMarketAnnounce(ann.getId());
-            Main.getData().db().getServerMarket("global").addMarketAnnounce(ann.getId());
+            Main.getData().db().getServerMarket("server").addMarketAnnounce(ann.getId());
 
             m.sendMessage("§aAnuncio criado com sucesso!");
 

@@ -8,6 +8,7 @@ import net.heyzeer0.mm.gui.MarketGUI;
 import net.heyzeer0.mm.gui.MarketManager;
 import net.heyzeer0.mm.profiles.MarketAnnounce;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -27,23 +28,20 @@ public class GlobalGUI {
         p.closeInventory();
 
         MarketGUI gui = new MarketGUI("MagiMarket - Anuncios Globais");
-        gui.setLeftCorner(Utils.getCustomItem(Material.ENDER_CHEST, 1, "§eSeu Estoque", Arrays.asList("§7Clique aqui para ver", "§7seu estoque.")), e -> {StockGUI.openGui(p);});
-        gui.setMainButtom(Utils.getCustomItem(Material.GRASS, 1, "§2Anuncios Globais", Arrays.asList("§7Clique aqui para ver", "§7os anuncios globais.")), e -> {ServerGUI.openGui((Player)e.getWhoClicked());});
+        gui.setLeftCorner(Utils.getCustomItem(Material.ENDER_CHEST, 1, "§eSeu Estoque", Arrays.asList("§7Clique aqui para ver", "§7seu estoque.")), e -> {StockGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
+        gui.setMainButtom(Utils.getCustomItem(Material.GRASS, 1, "§2Anuncios Globais", Arrays.asList("§7Clique aqui para ver", "§7os anuncios globais.", "§f", "§7Seu dinheiro: §a" + Main.eco.getBalance(p))), e -> {ServerGUI.openGui((Player)e.getWhoClicked()); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
 
         int id = 0;
         MarketProfile pr = Main.getData().db.getServerMarket("global");
-        System.out.println("checando anuncios");
         if(pr.getAnnounceList().size() >= 1) {
-            System.out.println("maior q 1");
             for(AnnounceProfile ap : pr.getMarketAnnounces()) {
-                System.out.println("anuncio: " + ap);
                 MarketAnnounce i = ap.getAnnounce();
                 ItemStack item = Utils.getCustomItem(i.getStack().getItemStack(), Arrays.asList(
                         "§7Preço: §e" + i.getPrice(),
                         "§7Quantidade: §e" + i.getAmount(),
                         "§8Id: " + id,
                         "§f",
-                        "§a<clique esquerdo para comprar>",
+                        !i.getOwner().equals(p.getUniqueId()) ? "§a<clique esquerdo para comprar>" : "§e<você é o dono deste anuncio>",
                         p.hasPermission("magimarket.owner") ? "§c<clique esquerdo para desativar>" : ""));
 
                 gui.addItem(item, e -> {

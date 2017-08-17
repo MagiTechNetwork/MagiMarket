@@ -8,6 +8,7 @@ import net.heyzeer0.mm.gui.MarketGUI;
 import net.heyzeer0.mm.gui.MarketManager;
 import net.heyzeer0.mm.profiles.MarketAnnounce;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -22,8 +23,8 @@ public class StockGUI {
         p.closeInventory();
 
         MarketGUI gui = new MarketGUI("MagiMarket - Seu Estoque");
-        gui.setLeftCorner(Utils.getCustomItem(Material.CHEST, 1, "§eAnuncios do servidor", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.")), e -> {GlobalGUI.openGui(p);});
-        gui.setMainButtom(Utils.getCustomItem(Material.GRASS, 1, "§2Mostrando seus anuncios", Arrays.asList("§7Clique aqui para fechar", "§7esta janela.")), e -> {e.getWhoClicked().closeInventory();});
+        gui.setLeftCorner(Utils.getCustomItem(Material.CHEST, 1, "§eAnuncios do servidor", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.")), e -> {GlobalGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
+        gui.setMainButtom(Utils.getCustomItem(Material.GRASS, 1, "§2Mostrando seus anuncios", Arrays.asList("§7Clique aqui para fechar", "§7esta janela.", "§f", "§7Seu dinheiro: §a" + Main.eco.getBalance(p))), e -> {e.getWhoClicked().closeInventory();});
 
         int id = 0;
         UserProfile pr = Main.getData().db.getUserProfile(p);

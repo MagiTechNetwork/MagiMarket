@@ -25,16 +25,16 @@ public class MarketProfile implements ManagedObject {
 
     public static final String DB_TABLE = "listings";
 
-    String name;
+    String id;
     ArrayList<String> announceList = new ArrayList<>();
 
     public MarketProfile(String name) {
-        this.name = name;
+        this.id = name;
     }
 
-    @ConstructorProperties({"name", "announceList"})
-    public MarketProfile(String name, ArrayList<String> announceList) {
-        this.name = name;
+    @ConstructorProperties({"id", "announceList"})
+    public MarketProfile(String id, ArrayList<String> announceList) {
+        this.id = id;
         this.announceList = announceList;
     }
 
@@ -75,12 +75,12 @@ public class MarketProfile implements ManagedObject {
 
     @Override
     public void delete() {
-        r.table(DB_TABLE).get(getName()).delete().runNoReply(Main.getData().conn);
+        r.table(DB_TABLE).get(getId()).delete().runNoReply(Main.getData().conn);
     }
 
     @Override
     public void save() {
-        System.out.println("" + r.table(DB_TABLE).insert(this).optArg("conflict", "replace").run(Main.getData().conn));
+        r.table(DB_TABLE).insert(this).optArg("conflict", "replace").runNoReply(Main.getData().conn);
     }
 
 }

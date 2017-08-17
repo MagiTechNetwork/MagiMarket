@@ -3,6 +3,7 @@ package net.heyzeer0.mm.profiles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import net.heyzeer0.mm.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -55,21 +56,27 @@ public class MarketAnnounce {
     @JsonIgnore
     public boolean buyItem(Player p) {
         if(sell) {
+            Bukkit.broadcastMessage("sell");
             return false;
         }
         if(!Main.eco.has(p, price)) {
+            Bukkit.broadcastMessage("no money");
             return false;
         }
         if(p.getInventory().firstEmpty() == -1) {
+            Bukkit.broadcastMessage("no space");
             return false;
         }
-        if(stock < amount && !server) {
+        if(!server && stock < amount) {
+            Bukkit.broadcastMessage("no stock " + server);
             return false;
         }
         if(!server) {
+            Bukkit.broadcastMessage("não e server");
             stock-=amount;
         }
         p.getInventory().addItem(stack.getItemStack());
+        Main.eco.withdrawPlayer(p, price);
         if(stock < amount) {
             active = false;
         }
@@ -77,18 +84,21 @@ public class MarketAnnounce {
     }
 
     @JsonIgnore
-    public boolean sellItem(Player p) {
+    public double sellItem(Player p) {
         if(!sell) {
-            return false;
+            return 0;
         }
         if(!server) {
-            return false;
+            return 0;
         }
 
         double peritem = price / amount;
         double money = 0;
 
         for(ItemStack i : p.getInventory().getContents()) {
+            if(i == null) {
+                continue;
+            }
             if(i.isSimilar(stack.getItemStack())) {
                 p.getInventory().remove(i);
                 money += i.getAmount() * peritem;
@@ -101,7 +111,7 @@ public class MarketAnnounce {
             stock+=amount;
         }
 
-        return true;
+        return money;
     }
 
 }

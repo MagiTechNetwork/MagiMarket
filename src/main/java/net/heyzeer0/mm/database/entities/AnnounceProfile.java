@@ -19,19 +19,18 @@ public class AnnounceProfile implements ManagedObject {
 
     public static final String DB_TABLE = "announces";
 
-    String uuid;
+    String id;
     MarketAnnounce announce;
 
     public AnnounceProfile(MarketAnnounce announce) {
-        this.uuid = UUID.randomUUID().toString();
+        this.id = UUID.randomUUID().toString();
         this.announce = announce;
     }
 
-    @ConstructorProperties({"uuid", "announce"})
-    public AnnounceProfile(String uuid, MarketAnnounce announce) {
-        this.uuid = uuid;
+    @ConstructorProperties({"id", "announce"})
+    public AnnounceProfile(String id, MarketAnnounce announce) {
+        this.id = id;
         this.announce = announce;
-        System.out.println("constructor");
     }
 
     public void updateChanges(MarketAnnounce ci) {
@@ -41,13 +40,12 @@ public class AnnounceProfile implements ManagedObject {
 
     @Override
     public void delete() {
-        r.table(DB_TABLE).get(getUuid()).delete().runNoReply(Main.getData().conn);
+        r.table(DB_TABLE).get(getId()).delete().runNoReply(Main.getData().conn);
     }
 
     @Override
     public void save() {
-        System.out.println("salvando");
-        System.out.println("" + r.table(DB_TABLE).insert(this).optArg("conflict", "replace").run(Main.getData().conn));
+        r.table(DB_TABLE).insert(this).optArg("conflict", "replace").runNoReply(Main.getData().conn);
     }
 
 }
