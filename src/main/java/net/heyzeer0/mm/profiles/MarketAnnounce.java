@@ -1,7 +1,11 @@
 package net.heyzeer0.mm.profiles;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import net.heyzeer0.mm.Main;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.beans.ConstructorProperties;
 import java.util.UUID;
@@ -24,16 +28,20 @@ public class MarketAnnounce {
     boolean active = false;
     Integer stock = 0;
 
-    @ConstructorProperties({"amount", "stack", "price", "owner", "server", "sell"})
-    public MarketAnnounce(Integer amount, WrappedStack stack, Integer price, UUID owner, boolean server, boolean sell) {
+    long creation = System.currentTimeMillis();
+
+    @ConstructorProperties({"amount", "stack", "price", "owner", "server", "sell", "stock", "creation"})
+    public MarketAnnounce(Integer amount, WrappedStack stack, Integer price, UUID owner, boolean server, boolean sell, Integer stock, long creation) {
         this.amount = amount;
         this.stack = stack;
         this.price = price;
         this.owner = owner;
         this.server = server;
         this.sell = sell;
+        this.creation = creation;
     }
 
+    @JsonIgnore
     public boolean addStock(InventoryClickEvent e) {
         WrappedStack add = new WrappedStack(e.getCursor());
         if(add.base64.equals(stack.base64)) {
@@ -41,6 +49,56 @@ public class MarketAnnounce {
             e.setCursor(null);
         }
         return false;
+    }
+
+    @JsonIgnore
+    public boolean buyItem(Player p) {
+        if(sell) {
+            return false;
+        }
+        if(!Main.eco.has(p, price)) {
+            return false;
+        }
+        if(p.getInventory().firstEmpty() == -1) {
+            return false;
+        }
+        if(stock < amount && !server) {
+            return false;
+        }
+        stock-=amount;
+        p.getInventory().addItem(stack.getItemStack());
+        if(stock < amount) {
+            active = false;
+        }
+        return true;
+    }
+
+    @JsonIgnore
+    public boolean sellItem(Player p) {
+        if(!sell) {
+            return false;
+        }
+        if(!server) {
+            return false;
+        }
+
+        double peritem = price / amount;
+        double money = 0;
+
+        for(ItemStack i : p.getInventory().getContents()) {
+            if(i.isSimilar(stack.getItemStack())) {
+                p.getInventory().remove(i);
+                money += i.getAmount() * peritem;
+            }
+        }
+
+        Main.eco.depositPlayer(p, money);
+
+        if(!server) {
+            stock+=amount;
+        }
+
+        return true;
     }
 
 }

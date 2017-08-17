@@ -33,10 +33,6 @@ public class MarketData {
         return exec;
     }
 
-    public static void queue(Callable<?> action) {
-        getExecutor().submit(action);
-    }
-
     public static void queue(Runnable runnable) {
         getExecutor().submit(runnable);
     }

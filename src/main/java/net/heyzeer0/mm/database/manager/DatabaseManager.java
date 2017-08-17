@@ -1,6 +1,8 @@
 package net.heyzeer0.mm.database.manager;
 
 import com.rethinkdb.net.Connection;
+import net.heyzeer0.mm.database.entities.MarketProfile;
+
 import static com.rethinkdb.RethinkDB.r;
 
 /**
@@ -20,8 +22,9 @@ public class DatabaseManager {
         }catch (Exception ignored) {}
     }
 
-
-
-
+    public MarketProfile getServerMarket(String name) {
+        MarketProfile data = r.table(MarketProfile.DB_TABLE).get(name).run(conn, MarketProfile.class);
+        return data != null ? data : new MarketProfile(name);
+    }
 
 }
