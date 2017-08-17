@@ -1,4 +1,4 @@
-package net.heyzeer0.mm.commands.cmds;
+package net.heyzeer0.mm.commands.subcmds;
 
 import net.heyzeer0.mm.configs.MainConfig;
 import net.heyzeer0.mm.interfaces.CommandExec;

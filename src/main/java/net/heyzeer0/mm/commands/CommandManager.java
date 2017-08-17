@@ -1,13 +1,17 @@
 package net.heyzeer0.mm.commands;
 
-import net.heyzeer0.mm.commands.cmds.ConfigCommand;
-import net.heyzeer0.mm.commands.cmds.HelpCommand;
+import net.heyzeer0.mm.Utils;
+import net.heyzeer0.mm.commands.subcmds.ConfigCommand;
+import net.heyzeer0.mm.commands.subcmds.HelpCommand;
 import net.heyzeer0.mm.configs.Lang;
 import net.heyzeer0.mm.configs.MainConfig;
+import net.heyzeer0.mm.gui.MarketGUI;
+import net.heyzeer0.mm.gui.MarketManager;
 import net.heyzeer0.mm.interfaces.CommandExec;
 import net.heyzeer0.mm.interfaces.annotation.Command;
 import net.heyzeer0.mm.profiles.CommandProfile;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -50,8 +54,20 @@ public class CommandManager {
             @Override
             public boolean execute(CommandSender commandSender, String s, String[] strings) {
                 if(commandSender instanceof Player) {
+                    if(strings.length <= 0) {
+                        MarketGUI gui = new MarketGUI("MagiMarket - Anuncios");
+                        gui.setMainButtom(Utils.getCustomItem(Material.GRASS, 1, "§2> Anuncios Publicos"), event -> {event.getWhoClicked().closeInventory();});
+                        gui.setLeftCorner(Utils.getCustomItem(Material.ENDER_CHEST, 1, "§e> Seu Estoque"), event -> {event.getWhoClicked().closeInventory();});
+
+                        for(int i = 0; i <= 36; i++) {
+                            gui.addItem(Utils.getCustomItem(Material.ANVIL, 64, "§8A bigorna.png"), e -> {});
+                        }
+
+                        MarketManager.openGui((Player)commandSender, gui);
+                        return true;
+                    }
                     if(!handleCommand((Player)commandSender, strings)) {
-                        handleCommand((Player)commandSender, new String[] {"help", "help", "help", "help"});
+                        handleCommand((Player)commandSender, new String[] {"help"});
                     }
                 }
                 return false;

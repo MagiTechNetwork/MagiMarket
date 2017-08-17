@@ -1,10 +1,9 @@
 package net.heyzeer0.mm.profiles;
 
 import lombok.Getter;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import net.heyzeer0.mm.gui.MarketGUI;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.concurrent.Callable;
 
 /**
  * Created by HeyZeer0 on 17/08/2017.
@@ -14,9 +13,9 @@ import java.util.concurrent.Callable;
 public class ItemExecutor {
 
     ItemStack i;
-    Callable<InventoryClickEvent> ex;
+    MarketGUI.ClickEvent ex;
 
-    public ItemExecutor(ItemStack i, Callable<InventoryClickEvent> ex) {
+    public ItemExecutor(ItemStack i, MarketGUI.ClickEvent ex) {
         this.i = i;
         this.ex = ex;
     }

@@ -5,8 +5,11 @@ import net.heyzeer0.mm.configs.DatabaseConfig;
 import net.heyzeer0.mm.configs.Lang;
 import net.heyzeer0.mm.configs.MainConfig;
 import net.heyzeer0.mm.database.MarketData;
+import net.heyzeer0.mm.gui.MarketManager;
 import net.heyzeer0.mm.managers.ConfigManager;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -57,6 +60,9 @@ public class Main extends JavaPlugin {
             getLogger().log(Level.SEVERE, "An error ocurred while trying to connect to the database.");
             return;
         }
+
+        PluginManager pm = Bukkit.getPluginManager();
+        pm.registerEvents(new MarketManager(), this);
 
         //Cmds
         CommandManager.registerCommands();

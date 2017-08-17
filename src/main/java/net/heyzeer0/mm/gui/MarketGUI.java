@@ -10,8 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.UUID;
-import java.util.concurrent.Callable;
 
 /**
  * Created by HeyZeer0 on 17/08/2017.
@@ -27,35 +25,24 @@ public class MarketGUI {
 
     Integer page = 1;
     Inventory inv;
-    Player p;
 
     public MarketGUI(String title) {
         this.title = title;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public Player getPlayer() {
-        return p;
-    }
-
-    public void setLeftCorner(ItemStack i, Callable<InventoryClickEvent> ix) {
+    public void setLeftCorner(ItemStack i, ClickEvent ix) {
         left_corner = new ItemExecutor(i, ix);
     }
 
-    public void setMainButtom(ItemStack i, Callable<InventoryClickEvent> ix) {
+    public void setMainButtom(ItemStack i, ClickEvent ix) {
         main_buttom = new ItemExecutor(i, ix);
     }
 
-    public void addItem(ItemStack i, Callable<InventoryClickEvent> ix) {
+    public void addItem(ItemStack i, ClickEvent ix) {
         itemStacks.add(new ItemExecutor(i, ix));
     }
 
-    public void sendGui(Player p) {
-        this.p = p;
-
+    protected void sendGui(Player p) {
         boolean created = false;
         if(inv == null) {
             created = true;
@@ -66,35 +53,42 @@ public class MarketGUI {
         //max 35 p/pag
         Integer max = page * 36;
         for(int i = ((page - 1) * 36); i < max; i++) {
-            if(itemStacks.size() < i) {
+            if(itemStacks.size() <= i) {
                 break;
             }
             inv.addItem(itemStacks.get(i).getI());
         }
 
-        if(itemStacks.size() > 36) {
+        if(itemStacks.size() > (page * 36)) {
             ItemStack x = new ItemStack(Material.ARROW, 1);
             ItemMeta i = x.getItemMeta();
             i.setDisplayName("§aPróxima Página");
             x.setItemMeta(i);
-            inv.setItem(51, x);
+            inv.setItem(50, x);
         }
-        if(page != 0) {
+        if(page != 1) {
             ItemStack x = new ItemStack(Material.ARROW, 1);
             ItemMeta i = x.getItemMeta();
             i.setDisplayName("§cPágina Anterior");
             x.setItemMeta(i);
-            inv.setItem(49, x);
+            inv.setItem(48, x);
         }
-        inv.setItem(50, main_buttom.getI());
-        inv.setItem(46, left_corner.getI());
+        inv.setItem(49, main_buttom.getI());
+        inv.setItem(45, left_corner.getI());
 
         if(created) {
             p.openInventory(inv);
         }
     }
 
-    public void handleClick(InventoryClickEvent e) {
+    protected void handleClick(InventoryClickEvent e) {
+        e.setCancelled(true);
+        if(e.getCurrentItem() == null) {
+            return;
+        }
+        if(!e.getClickedInventory().getTitle().equalsIgnoreCase(e.getView().getTopInventory().getTitle())) {
+            return;
+        }
         if(e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().hasDisplayName() && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§aPróxima Página")) {
             page++;
             sendGui((Player)e.getWhoClicked());
@@ -105,26 +99,27 @@ public class MarketGUI {
             sendGui((Player)e.getWhoClicked());
             return;
         }
-        if(e.getSlot() == 50) {
-            try{
-                main_buttom.getEx().call();
-            }catch (Exception ex) {
-                ex.printStackTrace();
-            }
+        if(e.getSlot() == 49) {
+            main_buttom.getEx().userClicked(e);
             return;
         }
-        if(e.getSlot() == 46) {
-            try{
-                left_corner.getEx().call();
-            }catch (Exception ex) {
-                ex.printStackTrace();
-            }
+        if(e.getSlot() == 45) {
+            main_buttom.getEx().userClicked(e);
             return;
         }
 
         try{
-            itemStacks.get(((page - 1) * 36) + e.getSlot()).getEx().call();
+            int px = ((page - 1) * 36) + e.getSlot();
+            if(itemStacks.size() >= px) {
+                itemStacks.get(px).getEx().userClicked(e);
+            }
         }catch (Exception ex) {ex.printStackTrace();}
+    }
+
+    public interface ClickEvent {
+
+        void userClicked(InventoryClickEvent e);
+
     }
 
 }
