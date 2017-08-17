@@ -9,8 +9,10 @@ import org.bukkit.entity.Player;
 
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import static com.rethinkdb.RethinkDB.r;
+import static net.heyzeer0.mm.Main.getData;
 
 /**
  * Created by HeyZeer0 on 17/08/2017.
@@ -22,20 +24,20 @@ public class UserProfile implements ManagedObject {
     public static final String DB_TABLE = "users";
 
     String uuid;
-    ArrayList<MarketAnnounce> announceList = new ArrayList<>();
+    ArrayList<String> announceList = new ArrayList<>();
 
     public UserProfile(Player p) {
         uuid = p.getUniqueId().toString();
     }
 
     @ConstructorProperties({"uuid", "announceList"})
-    public UserProfile(String uuid, ArrayList<MarketAnnounce> announceList) {
+    public UserProfile(String uuid, ArrayList<String> announceList) {
         this.uuid = uuid;
         this.announceList = announceList;
     }
 
     @JsonIgnore
-    public boolean addMarketAnnounce(MarketAnnounce ann) {
+    public boolean addMarketAnnounce(String ann) {
         if(announceList.contains(ann)) {
             return false;
         }
@@ -45,7 +47,7 @@ public class UserProfile implements ManagedObject {
     }
 
     @JsonIgnore
-    public boolean removeMarketAnnounce(MarketAnnounce ann) {
+    public boolean removeMarketAnnounce(String ann) {
         if(!announceList.contains(ann)) {
             return false;
         }
@@ -54,14 +56,29 @@ public class UserProfile implements ManagedObject {
         return true;
     }
 
+    @JsonIgnore
+    public List<AnnounceProfile> getUserAnnounces() {
+        ArrayList<AnnounceProfile> announces = new ArrayList<>();
+        for(String ann : announceList) {
+            AnnounceProfile profile = Main.getData().db().getAnnounce(ann);
+            if(profile == null) {
+                removeMarketAnnounce(ann);
+                continue;
+            }
+            announces.add(profile);
+        }
+
+        return announces;
+    }
+
     @Override
     public void delete() {
-        r.table(DB_TABLE).get(uuid).delete().runNoReply(Main.getData().conn);
+        r.table(DB_TABLE).get(uuid).delete().runNoReply(getData().conn);
     }
 
     @Override
     public void save() {
-        r.table(DB_TABLE).insert(this).optArg("conflict", "replace").runNoReply(Main.getData().conn);
+        System.out.println("" + r.table(DB_TABLE).insert(this).optArg("conflict", "replace").run(getData().conn));
     }
 
 }

@@ -2,6 +2,7 @@ package net.heyzeer0.mm.gui.guis;
 
 import net.heyzeer0.mm.Main;
 import net.heyzeer0.mm.Utils;
+import net.heyzeer0.mm.database.entities.AnnounceProfile;
 import net.heyzeer0.mm.database.entities.MarketProfile;
 import net.heyzeer0.mm.gui.MarketGUI;
 import net.heyzeer0.mm.gui.MarketManager;
@@ -31,8 +32,12 @@ public class GlobalGUI {
 
         int id = 0;
         MarketProfile pr = Main.getData().db.getServerMarket("global");
+        System.out.println("checando anuncios");
         if(pr.getAnnounceList().size() >= 1) {
-            for(MarketAnnounce i : pr.getAnnounceList()) {
+            System.out.println("maior q 1");
+            for(AnnounceProfile ap : pr.getMarketAnnounces()) {
+                System.out.println("anuncio: " + ap);
+                MarketAnnounce i = ap.getAnnounce();
                 ItemStack item = Utils.getCustomItem(i.getStack().getItemStack(), Arrays.asList(
                         "§7Preço: §e" + i.getPrice(),
                         "§7Quantidade: §e" + i.getAmount(),

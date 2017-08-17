@@ -12,6 +12,8 @@ import net.heyzeer0.mm.profiles.MarketAnnounce;
 
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
+import java.util.List;
+
 import static com.rethinkdb.RethinkDB.r;
 
 /**
@@ -24,20 +26,20 @@ public class MarketProfile implements ManagedObject {
     public static final String DB_TABLE = "listings";
 
     String name;
-    ArrayList<MarketAnnounce> announceList = new ArrayList<>();
+    ArrayList<String> announceList = new ArrayList<>();
 
     public MarketProfile(String name) {
         this.name = name;
     }
 
     @ConstructorProperties({"name", "announceList"})
-    public MarketProfile(String name, ArrayList<MarketAnnounce> announceList) {
+    public MarketProfile(String name, ArrayList<String> announceList) {
         this.name = name;
         this.announceList = announceList;
     }
 
     @JsonIgnore
-    public boolean addMarketAnnounce(MarketAnnounce ann) {
+    public boolean addMarketAnnounce(String ann) {
         if(announceList.contains(ann)) {
             return false;
         }
@@ -47,13 +49,28 @@ public class MarketProfile implements ManagedObject {
     }
 
     @JsonIgnore
-    public boolean removeMarketAnnounce(MarketAnnounce ann) {
+    public boolean removeMarketAnnounce(String ann) {
         if(!announceList.contains(ann)) {
             return false;
         }
         announceList.remove(ann);
         saveAsync();
         return true;
+    }
+
+    @JsonIgnore
+    public List<AnnounceProfile> getMarketAnnounces() {
+        ArrayList<AnnounceProfile> announces = new ArrayList<>();
+        for(String ann : announceList) {
+            AnnounceProfile profile = Main.getData().db().getAnnounce(ann);
+            if(profile == null) {
+                removeMarketAnnounce(ann);
+                continue;
+            }
+            announces.add(profile);
+        }
+
+        return announces;
     }
 
     @Override
@@ -63,7 +80,7 @@ public class MarketProfile implements ManagedObject {
 
     @Override
     public void save() {
-        r.table(DB_TABLE).insert(this).optArg("conflict", "replace").runNoReply(Main.getData().conn);
+        System.out.println("" + r.table(DB_TABLE).insert(this).optArg("conflict", "replace").run(Main.getData().conn));
     }
 
 }

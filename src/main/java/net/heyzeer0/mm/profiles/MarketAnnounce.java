@@ -30,8 +30,8 @@ public class MarketAnnounce {
 
     long creation = System.currentTimeMillis();
 
-    @ConstructorProperties({"amount", "stack", "price", "owner", "server", "sell", "stock", "creation"})
-    public MarketAnnounce(Integer amount, WrappedStack stack, Integer price, UUID owner, boolean server, boolean sell, Integer stock, long creation) {
+    @ConstructorProperties({"amount", "stack", "price", "owner", "server", "sell", "stock", "creation", "active"})
+    public MarketAnnounce(Integer amount, WrappedStack stack, Integer price, UUID owner, boolean server, boolean sell, Integer stock, long creation, boolean active) {
         this.amount = amount;
         this.stack = stack;
         this.price = price;
@@ -39,6 +39,7 @@ public class MarketAnnounce {
         this.server = server;
         this.sell = sell;
         this.creation = creation;
+        this.active = active;
     }
 
     @JsonIgnore
@@ -65,7 +66,9 @@ public class MarketAnnounce {
         if(stock < amount && !server) {
             return false;
         }
-        stock-=amount;
+        if(!server) {
+            stock-=amount;
+        }
         p.getInventory().addItem(stack.getItemStack());
         if(stock < amount) {
             active = false;

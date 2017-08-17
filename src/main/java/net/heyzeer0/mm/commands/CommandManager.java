@@ -2,6 +2,7 @@ package net.heyzeer0.mm.commands;
 
 import net.heyzeer0.mm.Utils;
 import net.heyzeer0.mm.commands.subcmds.ConfigCommand;
+import net.heyzeer0.mm.commands.subcmds.CreateCommand;
 import net.heyzeer0.mm.commands.subcmds.HelpCommand;
 import net.heyzeer0.mm.configs.Lang;
 import net.heyzeer0.mm.configs.MainConfig;
@@ -79,6 +80,7 @@ public class CommandManager {
 
         registerCommand(new HelpCommand());
         registerCommand(new ConfigCommand());
+        registerCommand(new CreateCommand());
     }
 
 

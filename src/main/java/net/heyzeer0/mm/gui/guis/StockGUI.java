@@ -2,6 +2,7 @@ package net.heyzeer0.mm.gui.guis;
 
 import net.heyzeer0.mm.Main;
 import net.heyzeer0.mm.Utils;
+import net.heyzeer0.mm.database.entities.AnnounceProfile;
 import net.heyzeer0.mm.database.entities.UserProfile;
 import net.heyzeer0.mm.gui.MarketGUI;
 import net.heyzeer0.mm.gui.MarketManager;
@@ -27,8 +28,8 @@ public class StockGUI {
         int id = 0;
         UserProfile pr = Main.getData().db.getUserProfile(p);
         if(pr.getAnnounceList().size() >= 1) {
-            for(MarketAnnounce i : pr.getAnnounceList()) {
-
+            for(AnnounceProfile ap : pr.getUserAnnounces()) {
+                MarketAnnounce i = ap.getAnnounce();
             }
         }
 

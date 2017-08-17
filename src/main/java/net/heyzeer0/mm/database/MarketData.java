@@ -1,8 +1,11 @@
 package net.heyzeer0.mm.database;
 
 import com.rethinkdb.net.Connection;
+import net.heyzeer0.mm.Main;
 import net.heyzeer0.mm.configs.DatabaseConfig;
+import net.heyzeer0.mm.database.entities.AnnounceProfile;
 import net.heyzeer0.mm.database.manager.DatabaseManager;
+import org.bukkit.Bukkit;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -17,7 +20,6 @@ import static com.rethinkdb.RethinkDB.r;
 public class MarketData {
 
     public Connection conn;
-    public static ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
     public DatabaseManager db;
 
     public MarketData() {
@@ -29,12 +31,8 @@ public class MarketData {
         return db;
     }
 
-    public static ScheduledExecutorService getExecutor() {
-        return exec;
-    }
-
     public static void queue(Runnable runnable) {
-        getExecutor().submit(runnable);
+        Bukkit.getScheduler().runTaskAsynchronously(Main.main, runnable::run);
     }
 
 }
