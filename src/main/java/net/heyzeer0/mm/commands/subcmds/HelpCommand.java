@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
  * Copyright © HeyZeer0 - 2016
  */
 
-@Command(name = "help", permission = "magimarket.cmd.help", description = "Lista todos os comandos.")
+@Command(name = "help", permission = "magimarket.cmd.help", description = "Lista todos os comandos")
 public class HelpCommand implements CommandExec {
 
     @Override

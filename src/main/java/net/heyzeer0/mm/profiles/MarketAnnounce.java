@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import net.heyzeer0.mm.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -26,13 +28,13 @@ public class MarketAnnounce {
     boolean server;
     UUID owner;
 
-    boolean active = false;
+    boolean onmarket;
     Integer stock = 0;
 
     long creation = System.currentTimeMillis();
 
-    @ConstructorProperties({"amount", "stack", "price", "owner", "server", "sell", "stock", "creation", "active"})
-    public MarketAnnounce(Integer amount, WrappedStack stack, Integer price, UUID owner, boolean server, boolean sell, Integer stock, long creation, boolean active) {
+    @ConstructorProperties({"amount", "stack", "price", "owner", "server", "sell", "stock", "creation", "onmarket"})
+    public MarketAnnounce(Integer amount, WrappedStack stack, Integer price, UUID owner, boolean server, boolean sell, Integer stock, long creation, boolean onmarket) {
         this.amount = amount;
         this.stack = stack;
         this.price = price;
@@ -40,45 +42,65 @@ public class MarketAnnounce {
         this.server = server;
         this.sell = sell;
         this.creation = creation;
-        this.active = active;
+        this.onmarket = onmarket;
+        this.stock = stock;
+    }
+
+    @JsonIgnore
+    public void setOnMarket(boolean value) {
+        onmarket = value;
+    }
+
+    @JsonIgnore
+    public void setAmountAndPriceAndMarket(Integer amount, Integer price, boolean market) {
+        this.amount = amount;
+        this.price = price;
+        this.onmarket = market;
     }
 
     @JsonIgnore
     public boolean addStock(InventoryClickEvent e) {
-        WrappedStack add = new WrappedStack(e.getCursor());
-        if(add.base64.equals(stack.base64)) {
-            stock += add.getAmount();
+        if(e.getCursor().isSimilar(stack.getItemStack())) {
+            stock += e.getCursor().getAmount();
             e.setCursor(null);
+            ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.BURP, 4f, 4f);
         }
         return false;
     }
 
     @JsonIgnore
+    public void removeStock(InventoryClickEvent e) {
+        if(e.getCursor().getType() == Material.AIR) {
+            Integer totake = stock > stack.getItemStack().getMaxStackSize() ? stack.getItemStack().getMaxStackSize() : stock;
+            ItemStack x = stack.getItemStack().clone();
+            x.setAmount(totake);
+            e.setCursor(x);
+            stock-=totake;
+        }
+    }
+
+    @JsonIgnore
     public boolean buyItem(Player p) {
         if(sell) {
-            Bukkit.broadcastMessage("sell");
             return false;
         }
         if(!Main.eco.has(p, price)) {
-            Bukkit.broadcastMessage("no money");
             return false;
         }
         if(p.getInventory().firstEmpty() == -1) {
-            Bukkit.broadcastMessage("no space");
             return false;
         }
         if(!server && stock < amount) {
-            Bukkit.broadcastMessage("no stock " + server);
             return false;
         }
         if(!server) {
-            Bukkit.broadcastMessage("não e server");
             stock-=amount;
+            Main.eco.depositPlayer(Bukkit.getOfflinePlayer(getOwner()), amount);
         }
         p.getInventory().addItem(stack.getItemStack());
         Main.eco.withdrawPlayer(p, price);
         if(stock < amount) {
-            active = false;
+            onmarket = false;
         }
         return true;
     }

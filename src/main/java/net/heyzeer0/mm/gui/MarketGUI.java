@@ -51,12 +51,14 @@ public class MarketGUI {
             inv.clear();
         }
         //max 35 p/pag
+        int slot = 0;
         Integer max = page * 36;
         for(int i = ((page - 1) * 36); i < max; i++) {
             if(itemStacks.size() <= i) {
                 break;
             }
-            inv.addItem(itemStacks.get(i).getI());
+            inv.setItem(slot, itemStacks.get(i).getI());
+            slot++;
         }
 
         if(itemStacks.size() > (page * 36)) {
@@ -82,13 +84,13 @@ public class MarketGUI {
     }
 
     protected void handleClick(InventoryClickEvent e) {
-        e.setCancelled(true);
         if(e.getCurrentItem() == null) {
             return;
         }
         if(!e.getClickedInventory().getTitle().equalsIgnoreCase(e.getView().getTopInventory().getTitle())) {
             return;
         }
+        e.setCancelled(true);
         if(e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().hasDisplayName() && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§aPróxima Página")) {
             page++;
             sendGui((Player)e.getWhoClicked());
@@ -114,6 +116,14 @@ public class MarketGUI {
                 itemStacks.get(px).getEx().userClicked(e);
             }
         }catch (Exception ex) {ex.printStackTrace();}
+    }
+
+    public void replaceClick(int slot, ItemStack x, ClickEvent i) {
+        int px = ((page - 1) * 36) + slot;
+        if(itemStacks.size() >= px) {
+            itemStacks.set(px, new ItemExecutor(x, i));
+            inv.setItem(slot, x);
+        }
     }
 
     public interface ClickEvent {

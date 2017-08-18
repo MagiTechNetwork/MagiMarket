@@ -11,5 +11,6 @@ public class MainConfig {
 
     public static String main_command_prefix = "market";
     public static String main_lang = "pt_BR";
+    public static Integer max_user_stock = 15;
 
 }

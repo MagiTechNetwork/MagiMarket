@@ -1,7 +1,7 @@
 package net.heyzeer0.mm.gui.guis;
 
 import net.heyzeer0.mm.Main;
-import net.heyzeer0.mm.Utils;
+import net.heyzeer0.mm.utils.ItemUtils;
 import net.heyzeer0.mm.database.entities.AnnounceProfile;
 import net.heyzeer0.mm.database.entities.MarketProfile;
 import net.heyzeer0.mm.gui.MarketGUI;
@@ -27,15 +27,15 @@ public class ServerGUI {
         p.closeInventory();
 
         MarketGUI gui = new MarketGUI("MagiMarket - Anuncios Servidor");
-        gui.setLeftCorner(Utils.getCustomItem(Material.ENDER_CHEST, 1, "§eSeu Estoque", Arrays.asList("§7Clique aqui para ver", "§7seu estoque.")), e -> {StockGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
-        gui.setMainButtom(Utils.getCustomItem(Material.COMMAND, 1, "§2Anuncios do Servidor", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.", "§f", "§7Seu dinheiro: §a" + Main.eco.getBalance(p))), e -> {GlobalGUI.openGui((Player)e.getWhoClicked()); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
+        gui.setLeftCorner(ItemUtils.getCustomItem(Material.ENDER_CHEST, 1, "§eSeu Estoque", Arrays.asList("§7Clique aqui para ver", "§7seu estoque.")), e -> {StockGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
+        gui.setMainButtom(ItemUtils.getCustomItem(Material.COMMAND, 1, "§2Anuncios do Servidor", Arrays.asList("§7Clique aqui para ver", "§7os anuncios globais.", "§f", "§7Seu dinheiro: §a" + Main.eco.getBalance(p))), e -> {GlobalGUI.openGui((Player)e.getWhoClicked()); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
 
         int id = 0;
         MarketProfile pr = Main.getData().db.getServerMarket("server");
         if(pr.getAnnounceList().size() >= 1) {
             for(AnnounceProfile ap : pr.getMarketAnnounces()) {
                 MarketAnnounce i = ap.getAnnounce();
-                ItemStack item = Utils.getCustomItem(i.getStack().getItemStack(), Arrays.asList(
+                ItemStack item = ItemUtils.getCustomItem(i.getStack().getItemStack(), Arrays.asList(
                         "§7Preço: §e" + i.getPrice(),
                         "§7Quantidade: §e" + i.getAmount(),
                         "§8Id: " + id,
@@ -49,24 +49,25 @@ public class ServerGUI {
                     if(e.getClick() == ClickType.RIGHT) {
                         if(e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().hasLore()) {
                             List<String> lore = e.getCurrentItem().getItemMeta().getLore();
-                            if(lore.get(5).equalsIgnoreCase("§4<clique direito para remover>")) {
-                                lore.set(5,  "§e<clique direito novamente para remover>");
-                                ItemStack x = e.getCurrentItem();
-                                ItemMeta y = x.getItemMeta();
-                                y.setLore(lore);
-                                x.setItemMeta(y);
-                                e.getInventory().setItem(e.getSlot(), x);
-                                ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);
-                                return;
+                            if(lore.size() >= 6) {
+                                if(lore.get(5).equalsIgnoreCase("§4<clique direito para remover>")) {
+                                    lore.set(5,  "§e<clique direito novamente para remover>");
+                                    ItemStack x = e.getCurrentItem();
+                                    ItemMeta y = x.getItemMeta();
+                                    y.setLore(lore);
+                                    x.setItemMeta(y);
+                                    e.getInventory().setItem(e.getSlot(), x);
+                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);
+                                    return;
+                                }
+                                if(lore.get(5).equalsIgnoreCase("§e<clique direito novamente para remover>")) {
+                                    gui.replaceClick(e.getSlot(), null, ev -> {});
+                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.VILLAGER_DEATH, 4f, 4f);
+                                    Main.getData().db().getServerMarket("server").removeMarketAnnounce(ap.getId());
+                                    Main.getData().db().getAnnounce(ap.getId()).deleteAsync();
+                                    return;
+                                }
                             }
-                            if(lore.get(5).equalsIgnoreCase("§e<clique direito novamente para remover>")) {
-                                e.getInventory().setItem(e.getSlot(), null);
-                                ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.VILLAGER_DEATH, 4f, 4f);
-                                Main.getData().db().getServerMarket("server").removeMarketAnnounce(ap.getId());
-                                Main.getData().db().getAnnounce(ap.getId()).deleteAsync();
-                                return;
-                            }
-
                         }
                     }
                     if(e.getClick() == ClickType.LEFT) {
@@ -165,6 +166,8 @@ public class ServerGUI {
                 });
             }
         }
+
+
 
         MarketManager.openGui(p, gui);
     }

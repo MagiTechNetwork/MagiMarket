@@ -1,20 +1,13 @@
 package net.heyzeer0.mm.commands;
 
-import net.heyzeer0.mm.Utils;
-import net.heyzeer0.mm.commands.subcmds.ConfigCommand;
-import net.heyzeer0.mm.commands.subcmds.CreateCommand;
-import net.heyzeer0.mm.commands.subcmds.CreateServerCommand;
-import net.heyzeer0.mm.commands.subcmds.HelpCommand;
+import net.heyzeer0.mm.commands.subcmds.*;
 import net.heyzeer0.mm.configs.Lang;
 import net.heyzeer0.mm.configs.MainConfig;
-import net.heyzeer0.mm.gui.MarketGUI;
-import net.heyzeer0.mm.gui.MarketManager;
 import net.heyzeer0.mm.gui.guis.GlobalGUI;
 import net.heyzeer0.mm.interfaces.CommandExec;
 import net.heyzeer0.mm.interfaces.annotation.Command;
 import net.heyzeer0.mm.profiles.CommandProfile;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
@@ -83,6 +76,7 @@ public class CommandManager {
         registerCommand(new ConfigCommand());
         registerCommand(new CreateCommand());
         registerCommand(new CreateServerCommand());
+        registerCommand(new StockCommand());
     }
 
 

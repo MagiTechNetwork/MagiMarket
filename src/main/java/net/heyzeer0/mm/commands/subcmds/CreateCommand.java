@@ -28,11 +28,16 @@ public class CreateCommand implements CommandExec {
             return;
         }
 
+        if(Main.getData().db().getUserProfile(m).getAnnounceList().size() + 1 > MainConfig.max_user_stock) {
+            m.sendMessage("§cVocê excedeu a quantidade maxima de anuncios!");
+            return;
+        }
+
         try{
             Integer amount = Integer.valueOf(args[1]);
             Integer price = Integer.valueOf(args[2]);
 
-            if(amount >= 64) {
+            if(amount >= m.getItemInHand().getMaxStackSize()) {
                 m.sendMessage("§cA quantidade não pode exceder uma stack!");
                 return;
             }

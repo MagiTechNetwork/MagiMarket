@@ -7,6 +7,7 @@ import net.heyzeer0.mm.configs.MainConfig;
 import net.heyzeer0.mm.database.MarketData;
 import net.heyzeer0.mm.gui.MarketManager;
 import net.heyzeer0.mm.managers.ConfigManager;
+import net.heyzeer0.mm.utils.SignUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -24,9 +25,18 @@ public class Main extends JavaPlugin {
     public static Main main;
     public static Economy eco;
     private static MarketData data;
+    public static SignUtils sign;
 
     public void onEnable() {
         main = this;
+
+        //Protocol Lib
+        if(!getServer().getPluginManager().isPluginEnabled("ProtocolLib")) {
+            getLogger().log(Level.SEVERE, "MagiMarket needs ProtocolLib to run.");
+            onDisable();
+        }
+
+        sign = new SignUtils(this);
 
         //Vault
         if(!getServer().getPluginManager().isPluginEnabled("Vault")) {
