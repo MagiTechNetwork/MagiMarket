@@ -65,7 +65,7 @@ public class StockGUI {
             }
         }
 
-        for(int slot = 0; slot < (MainConfig.max_user_stock - pr.getAnnounceList().size()); slot++) {
+        for(int slot = 0; slot < ( (p.hasPermission("magimarket.user.premium") ? MainConfig.max_premium_stock : MainConfig.max_user_stock) - pr.getAnnounceList().size()); slot++) {
             gui.addItem(ItemUtils.getCustomItem(Material.STAINED_GLASS_PANE, 1, "§aSlot livre", Arrays.asList("§7Arraste um item até aqui", "§7para adiciona-lo ao seu estoque", "§8Id: " + slot), (short)7), e -> {
                 removeAnnounce(gui, id, p, e);
             });
@@ -91,6 +91,17 @@ public class StockGUI {
                 }
                 if(lore.size() >= 4) {
                     if(lore.get(3).equalsIgnoreCase("§a<clique esquerdo para ativar>")) {
+                        if(MainConfig.tax_per_annouce != 0) {
+                            if(!Main.eco.has(p, MainConfig.tax_per_annouce)) {
+                                lore.set(3,  "§c<você não possui dinheiro suficiente>");
+                                ItemStack x = e.getCurrentItem();
+                                ItemMeta y = x.getItemMeta();
+                                y.setLore(lore);
+                                x.setItemMeta(y);
+                                e.getInventory().setItem(e.getSlot(), x);
+                                return;
+                            }
+                        }
                         new AnnounceCreationProfile(p, ap).start();
                     }
                     return;
@@ -165,6 +176,11 @@ public class StockGUI {
                 if(lore.get(0).equalsIgnoreCase("§7Arraste um item até aqui")) {
                     if(e.getCursor().getType() != Material.AIR) {
                         ItemStack click = e.getCursor();
+
+                        if(Main.materials.contains(click.getType())) {
+                            return;
+                        }
+
                         MarketAnnounce i = new MarketAnnounce(click.getAmount(), new WrappedStack(click), 0, p.getUniqueId(), false, false, click.getAmount(), System.currentTimeMillis(), false);
                         AnnounceProfile pf = new AnnounceProfile(i);
                         pf.saveAsync();

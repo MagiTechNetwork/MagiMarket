@@ -12,5 +12,7 @@ public class DatabaseConfig {
     public static String db_adress = "localhost";
     public static int db_port = 28015;
     public static String db_name = "magimarket";
+    public static String db_user = "admin";
+    public static String db_user_pass = "admin";
 
 }

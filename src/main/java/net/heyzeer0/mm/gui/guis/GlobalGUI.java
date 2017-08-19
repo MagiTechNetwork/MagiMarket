@@ -105,7 +105,9 @@ public class GlobalGUI {
                                     return;
                                 }
 
-                                if(!i.buyItem(p)) {
+                                MarketAnnounce i2 = Main.getData().db().getAnnounce(ap.getId()).getAnnounce();
+
+                                if(!i2.buyItem(p)) {
                                     lore.set(4,  "§c<ocorreu um erro>");
                                     ItemStack x = e.getCurrentItem();
                                     ItemMeta y = x.getItemMeta();
@@ -117,10 +119,9 @@ public class GlobalGUI {
                                 }
                                 p.sendMessage("§aO item comprado foi colocado em seu inventário.");
 
-                                if(!i.isOnmarket()) {
+                                if(!i2.isOnmarket()) {
                                     e.getInventory().setItem(e.getSlot(), null);
                                     Main.getData().db().getServerMarket("global").removeMarketAnnounce(ap.getId());
-                                    ap.updateChanges(i);
                                 }else{
                                     lore.set(4,  "§a<clique esquerdo para comprar>");
                                     ItemStack x = e.getCurrentItem();
@@ -130,7 +131,7 @@ public class GlobalGUI {
                                     e.getInventory().setItem(e.getSlot(), x);
                                 }
 
-                                Main.getData().db().getAnnounce(ap.getId()).updateChanges(i);
+                                Main.getData().db().getAnnounce(ap.getId()).updateChanges(i2);
 
                                 ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.VILLAGER_YES, 4f, 4f);
                             }

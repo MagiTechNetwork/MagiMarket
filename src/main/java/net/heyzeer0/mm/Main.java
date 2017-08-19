@@ -10,10 +10,13 @@ import net.heyzeer0.mm.managers.ConfigManager;
 import net.heyzeer0.mm.utils.SignUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -26,6 +29,8 @@ public class Main extends JavaPlugin {
     public static Economy eco;
     private static MarketData data;
     public static SignUtils sign;
+
+    public static ArrayList<Material> materials = new ArrayList<>();
 
     public void onEnable() {
         main = this;
@@ -58,6 +63,26 @@ public class Main extends JavaPlugin {
             ConfigManager.lockAndLoad(MainConfig.class);
             ConfigManager.lockAndLoad(DatabaseConfig.class);
             ConfigManager.updateLang(Lang.class);
+
+            //Blacklist
+            if(!MainConfig.blacklist.contains(",")) {
+                try{
+                    materials.add(Material.valueOf(MainConfig.blacklist));
+                }catch (Exception ex) {
+                    ex.printStackTrace();
+                    getLogger().log(Level.SEVERE, "An error ocurred while trying to add material " + MainConfig.blacklist + " at blacklist");
+                }
+            }else{
+                for(String s : MainConfig.blacklist.split(",")) {
+                    try{
+                        materials.add(Material.valueOf(s));
+                    }catch (Exception ex) {
+                        ex.printStackTrace();
+                        getLogger().log(Level.SEVERE, "An error ocurred while trying to add material " + s + " at blacklist");
+                    }
+                }
+            }
+
         }catch (Exception ex) {
             ex.printStackTrace();
         }

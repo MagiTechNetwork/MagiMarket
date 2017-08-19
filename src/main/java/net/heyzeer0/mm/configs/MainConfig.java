@@ -12,5 +12,9 @@ public class MainConfig {
     public static String main_command_prefix = "market";
     public static String main_lang = "pt_BR";
     public static Integer max_user_stock = 15;
+    public static Integer max_premium_stock = 20;
+    public static String blacklist = "STONE,CHEST";
+    public static Integer tax_per_annouce = 0;
+
 
 }

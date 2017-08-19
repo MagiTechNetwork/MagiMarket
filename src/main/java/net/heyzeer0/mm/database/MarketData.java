@@ -23,7 +23,7 @@ public class MarketData {
     public DatabaseManager db;
 
     public MarketData() {
-        conn = r.connection().hostname(DatabaseConfig.db_adress).port(DatabaseConfig.db_port).db(DatabaseConfig.db_name).connect();
+        conn = r.connection().hostname(DatabaseConfig.db_adress).port(DatabaseConfig.db_port).db(DatabaseConfig.db_name).user(DatabaseConfig.db_user, DatabaseConfig.db_user_pass).connect();
         db = new DatabaseManager(conn);
     }
 

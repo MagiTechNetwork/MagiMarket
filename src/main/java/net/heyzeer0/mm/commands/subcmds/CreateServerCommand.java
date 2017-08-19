@@ -1,6 +1,7 @@
 package net.heyzeer0.mm.commands.subcmds;
 
 import net.heyzeer0.mm.Main;
+import net.heyzeer0.mm.configs.Lang;
 import net.heyzeer0.mm.configs.MainConfig;
 import net.heyzeer0.mm.database.entities.AnnounceProfile;
 import net.heyzeer0.mm.interfaces.CommandExec;
@@ -20,11 +21,11 @@ public class CreateServerCommand implements CommandExec {
     @Override
     public void runCommand(Player m, String[] args) {
         if(args.length < 4) {
-            m.sendMessage("§cUse: /" + MainConfig.main_command_prefix + " create [quantidade] [preço] [vender]");
+            m.sendMessage(String.format(Lang.command_createserver_notenought_parameters, MainConfig.main_command_prefix));
             return;
         }
         if(m.getItemInHand() == null) {
-            m.sendMessage("§cVocê precisa estar segurando um item!");
+            m.sendMessage(Lang.command_create_not_holding_item);
             return;
         }
 
@@ -33,20 +34,20 @@ public class CreateServerCommand implements CommandExec {
             Integer price = Integer.valueOf(args[2]);
             Boolean vender = Boolean.valueOf(args[3]);
 
-            if(amount >= 64) {
-                m.sendMessage("§cA quantidade não pode exceder uma stack!");
+            if(amount > m.getItemInHand().getMaxStackSize()) {
+                m.sendMessage(Lang.command_create_item_stacklimit);
                 return;
             }
             if(price <= 0) {
-                m.sendMessage("§cO preço tem que ser maior que zero!");
+                m.sendMessage(Lang.command_create_price_morethan0);
                 return;
             }
             if(amount <= 0) {
-                m.sendMessage("§cA quantidade tem que ser maior que zero!");
+                m.sendMessage(Lang.command_create_amount_morethan0);
                 return;
             }
             if(m.getItemInHand().getAmount() < amount) {
-                m.sendMessage("§cVocê não tem a quantidade de itens necessários!");
+                m.sendMessage(Lang.command_create_notenought_items);
                 return;
             }
             ItemStack x = m.getItemInHand().clone();
@@ -64,11 +65,11 @@ public class CreateServerCommand implements CommandExec {
 
             Main.getData().db().getServerMarket("server").addMarketAnnounce(ann.getId());
 
-            m.sendMessage("§aAnuncio criado com sucesso!");
+            m.sendMessage(Lang.command_create_sucess);
 
         }catch (Exception ex) {
             ex.printStackTrace();
-            m.sendMessage("§cOs valores inseridos são invalidos.");
+            m.sendMessage(Lang.command_create_error_wrongvalues);
         }
     }
 
