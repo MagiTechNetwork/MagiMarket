@@ -10,6 +10,7 @@ import net.heyzeer0.mm.gui.MarketGUI;
 import net.heyzeer0.mm.gui.MarketManager;
 import net.heyzeer0.mm.profiles.MarketAnnounce;
 import net.heyzeer0.mm.profiles.WrappedStack;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -28,7 +29,7 @@ import java.util.List;
 public class StockGUI {
 
     public static void openGui(Player p) {
-        p.closeInventory();
+        //p.closeInventory();
 
         MarketGUI gui = new MarketGUI("MagiMarket - Seu Estoque");
         gui.setLeftCorner(ItemUtils.getCustomItem(Material.CHEST, 1, "§eAnuncios do servidor", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.")), e -> {GlobalGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
@@ -49,6 +50,8 @@ public class StockGUI {
                             "§f",
                             "§a<arraste items para ca afim de depositar>",
                             "§c<clique direito para desativar>"));
+
+                    item.setAmount(i.getAmount());
                 }else{
                     item = ItemUtils.getCustomItem(i.getStack().getItemStack(), Arrays.asList(
                             "§7Estoque: §e" + i.getStock(),
@@ -58,6 +61,7 @@ public class StockGUI {
                             "§a<arraste items para ca afim de depositar>",
                             "§c<clique direito para retirar items>"));
                 }
+
 
                 gui.addItem(item, e -> {
                     placeAnnounce(gui, id, p, e, i, ap);
@@ -194,6 +198,8 @@ public class StockGUI {
                                 "§a<clique esquerdo para ativar>",
                                 "§a<arraste items para ca afim de depositar>",
                                 "§c<clique direito para retirar items>"));
+
+                        item.setAmount(1);
 
                         e.getInventory().setItem(e.getSlot(), item);
 

@@ -22,6 +22,7 @@ public class MarketGUI {
     ArrayList<ItemExecutor> itemStacks = new ArrayList<>();
     ItemExecutor left_corner;
     ItemExecutor main_buttom;
+    ItemExecutor right_corner;
 
     Integer page = 1;
     Inventory inv;
@@ -38,11 +39,19 @@ public class MarketGUI {
         main_buttom = new ItemExecutor(i, ix);
     }
 
+    public void setRightCorner(ItemStack i, ClickEvent ix) {
+        right_corner = new ItemExecutor(i, ix);
+    }
+
     public void addItem(ItemStack i, ClickEvent ix) {
         itemStacks.add(new ItemExecutor(i, ix));
     }
 
-    protected void sendGui(Player p) {
+    public void cleanItems() {
+        itemStacks.clear();
+    }
+
+    public void sendGui(Player p) {
         boolean created = false;
         if(inv == null) {
             created = true;
@@ -77,6 +86,8 @@ public class MarketGUI {
         }
         inv.setItem(49, main_buttom.getI());
         inv.setItem(45, left_corner.getI());
+        if(right_corner != null)
+            inv.setItem(53, right_corner.getI());
 
         if(created) {
             p.openInventory(inv);
@@ -107,6 +118,10 @@ public class MarketGUI {
         }
         if(e.getSlot() == 45) {
             left_corner.getEx().userClicked(e);
+            return;
+        }
+        if(e.getSlot() == 53 && right_corner != null) {
+            right_corner.getEx().userClicked(e);
             return;
         }
 

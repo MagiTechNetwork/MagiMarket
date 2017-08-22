@@ -7,6 +7,7 @@ import net.heyzeer0.mm.configs.MainConfig;
 import net.heyzeer0.mm.database.MarketData;
 import net.heyzeer0.mm.gui.MarketManager;
 import net.heyzeer0.mm.managers.ConfigManager;
+import net.heyzeer0.mm.utils.ChatUtils;
 import net.heyzeer0.mm.utils.SignUtils;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -30,6 +31,8 @@ public class Main extends JavaPlugin {
     private static MarketData data;
     public static SignUtils sign;
 
+    public static boolean cauldron = false;
+
     public static ArrayList<Material> materials = new ArrayList<>();
 
     public void onEnable() {
@@ -40,8 +43,6 @@ public class Main extends JavaPlugin {
             getLogger().log(Level.SEVERE, "MagiMarket needs ProtocolLib to run.");
             onDisable();
         }
-
-        sign = new SignUtils(this);
 
         //Vault
         if(!getServer().getPluginManager().isPluginEnabled("Vault")) {
@@ -89,7 +90,10 @@ public class Main extends JavaPlugin {
 
         //Database
         try{
+            long now = System.currentTimeMillis();
+            getLogger().log(Level.WARNING, "Caching all database information.");
             data = new MarketData();
+            getLogger().log(Level.WARNING, "Took " + (System.currentTimeMillis() - now) + "ms");
         }catch (Exception ex) {
             ex.printStackTrace();
             getLogger().log(Level.SEVERE, "An error ocurred while trying to connect to the database.");
@@ -98,6 +102,14 @@ public class Main extends JavaPlugin {
 
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new MarketManager(), this);
+
+        if(!isCauldron()) {
+            sign = new SignUtils(this);
+        }else{
+            getLogger().log(Level.SEVERE, "This server is running Cauldron, Sign system will be replaced with Chat system.");
+            pm.registerEvents(new ChatUtils(), this);
+            cauldron = true;
+        }
 
         //Cmds
         CommandManager.registerCommands();
@@ -109,6 +121,19 @@ public class Main extends JavaPlugin {
 
     public static MarketData getData() {
         return data;
+    }
+
+    private static boolean isCauldron()
+    {
+        try
+        {
+            Class.forName("net.minecraftforge.common.ForgeHooks");
+        }
+        catch(Exception ignored)
+        {
+            return false;
+        }
+        return true;
     }
 
 }

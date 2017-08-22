@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -16,10 +17,13 @@ import java.util.UUID;
 public class MarketManager implements Listener {
 
     public static HashMap<UUID, MarketGUI> guis = new HashMap<>();
+    public static ArrayList<UUID> change = new ArrayList<>();
 
     public static void openGui(Player p, MarketGUI g) {
         if(guis.containsKey(p.getUniqueId())) {
             guis.replace(p.getUniqueId(), g);
+            change.add(p.getUniqueId());
+            g.sendGui(p);
             return;
         }
         guis.put(p.getUniqueId(), g);
@@ -36,6 +40,10 @@ public class MarketManager implements Listener {
     @EventHandler
     public static void close(InventoryCloseEvent e) {
         if(guis.containsKey(e.getPlayer().getUniqueId())) {
+            if(change.contains(e.getPlayer().getUniqueId())) {
+                change.remove(e.getPlayer().getUniqueId());
+                return;
+            }
             guis.remove(e.getPlayer().getUniqueId());
         }
     }

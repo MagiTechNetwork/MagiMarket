@@ -95,9 +95,11 @@ public class MarketAnnounce {
         }
         if(!server) {
             stock-=amount;
-            Main.eco.depositPlayer(Bukkit.getOfflinePlayer(getOwner()), amount);
+            Main.eco.depositPlayer(Bukkit.getOfflinePlayer(getOwner()), price);
         }
-        p.getInventory().addItem(stack.getItemStack());
+        ItemStack item = stack.getItemStack().clone();
+        item.setAmount(amount);
+        p.getInventory().addItem(item);
         Main.eco.withdrawPlayer(p, price);
         if(stock < amount) {
             onmarket = false;

@@ -22,6 +22,7 @@ public class HelpCommand implements CommandExec {
         System.out.println(args);
         for(String pr : CommandManager.cmds.keySet()) {
             CommandProfile cmd = CommandManager.cmds.get(pr);
+            if(m.hasPermission(cmd.getAnnotation().permission()))
             m.sendMessage(String.format(Lang.command_list_format, "/" + MainConfig.main_command_prefix + " " + cmd.getAnnotation().name(), cmd.getAnnotation().description()));
         }
     }

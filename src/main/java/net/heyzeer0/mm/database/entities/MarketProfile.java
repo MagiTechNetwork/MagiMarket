@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import net.heyzeer0.mm.Main;
 import net.heyzeer0.mm.database.interfaces.ManagedObject;
+import net.heyzeer0.mm.database.manager.DatabaseManager;
 import net.heyzeer0.mm.profiles.MarketAnnounce;
 
 import java.beans.ConstructorProperties;
@@ -75,12 +76,14 @@ public class MarketProfile implements ManagedObject {
 
     @Override
     public void delete() {
+        DatabaseManager.markets.remove(getId());
         r.table(DB_TABLE).get(getId()).delete().runNoReply(Main.getData().conn);
     }
 
     @Override
     public void save() {
         r.table(DB_TABLE).insert(this).optArg("conflict", "replace").runNoReply(Main.getData().conn);
+        DatabaseManager.markets.put(getId(), this);
     }
 
 }
