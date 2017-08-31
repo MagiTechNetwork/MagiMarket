@@ -26,15 +26,26 @@ public class UserProfile implements ManagedObject {
 
     String id;
     ArrayList<String> announceList = new ArrayList<>();
+    ArrayList<String> bank_statement = new ArrayList<>();
 
     public UserProfile(Player p) {
         id = p.getUniqueId().toString();
     }
 
-    @ConstructorProperties({"id", "announceList"})
-    public UserProfile(String id, ArrayList<String> announceList) {
+    @ConstructorProperties({"id", "announceList", "bank_statement"})
+    public UserProfile(String id, ArrayList<String> announceList, ArrayList<String> bank_statement) {
         this.id = id;
         this.announceList = announceList;
+        this.bank_statement = bank_statement;
+    }
+
+    @JsonIgnore
+    public void addBankStatement(String x) {
+        if(bank_statement.size() >= 30) {
+            bank_statement.remove(29);
+        }
+        bank_statement.add(x);
+        saveAsync();
     }
 
     @JsonIgnore

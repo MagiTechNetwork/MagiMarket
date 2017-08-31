@@ -1,6 +1,7 @@
 package net.heyzeer0.mm.gui.guis;
 
 import net.heyzeer0.mm.Main;
+import net.heyzeer0.mm.configs.Lang;
 import net.heyzeer0.mm.utils.ItemUtils;
 import net.heyzeer0.mm.database.entities.AnnounceProfile;
 import net.heyzeer0.mm.database.entities.MarketProfile;
@@ -27,11 +28,10 @@ public class GlobalGUI {
     public static void openGui(Player p) {
         //p.closeInventory();
 
-        MarketGUI gui = new MarketGUI("MagiMarket - Anuncios Globais");
+        MarketGUI gui = new MarketGUI(Lang.market_gui_global_name);
         gui.setLeftCorner(ItemUtils.getCustomItem(Material.ENDER_CHEST, 1, "§eSeu Estoque", Arrays.asList("§7Clique aqui para ver", "§7seu estoque.")), e -> {StockGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
         gui.setMainButtom(ItemUtils.getCustomItem(Material.GRASS, 1, "§2Anuncios Globais", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.", "§f", "§7Seu dinheiro: §a" + Main.eco.getBalance(p))), e -> {ServerGUI.openGui((Player)e.getWhoClicked()); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
 
-        int id = 0;
         MarketProfile pr = Main.getData().db.getServerMarket("global");
         if(pr.getAnnounceList().size() >= 1) {
             for(AnnounceProfile ap : pr.getMarketAnnounces()) {
@@ -42,7 +42,7 @@ public class GlobalGUI {
                         "§8Dono: " + Bukkit.getOfflinePlayer(i.getOwner()).getName(),
                         "§f",
                         !i.getOwner().equals(p.getUniqueId()) ? "§a<clique esquerdo para comprar>" : "§e<você é o dono deste anuncio>",
-                        p.hasPermission("magimarket.owner") || i.getOwner().equals(p.getUniqueId()) ? "§c<clique esquerdo para desativar>" : ""));
+                        p.hasPermission("magimarket.owner") || i.getOwner().equals(p.getUniqueId()) ? "§c<clique direito para desativar>" : ""));
 
                 item.setAmount(i.getAmount());
 
@@ -51,7 +51,7 @@ public class GlobalGUI {
                         if(e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().hasLore()) {
                                 List<String> lore = e.getCurrentItem().getItemMeta().getLore();
                             if(lore.size() >= 6) {
-                                if(lore.get(5).equalsIgnoreCase("§c<clique esquerdo para desativar>")) {
+                                if(lore.get(5).equalsIgnoreCase("§c<clique direito para desativar>")) {
                                     lore.set(5,  "§e<clique direito novamente para desativar>");
                                     ItemStack x = e.getCurrentItem();
                                     ItemMeta y = x.getItemMeta();

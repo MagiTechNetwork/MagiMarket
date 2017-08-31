@@ -1,6 +1,7 @@
 package net.heyzeer0.mm.gui.guis;
 
 import net.heyzeer0.mm.Main;
+import net.heyzeer0.mm.configs.Lang;
 import net.heyzeer0.mm.utils.ItemUtils;
 import net.heyzeer0.mm.database.entities.AnnounceProfile;
 import net.heyzeer0.mm.database.entities.MarketProfile;
@@ -27,7 +28,7 @@ public class ServerGUI {
     public static void openGui(Player p) {
         //p.closeInventory();
 
-        MarketGUI gui = new MarketGUI("MagiMarket - Anuncios Servidor");
+        MarketGUI gui = new MarketGUI(Lang.market_gui_server_name);
         gui.setLeftCorner(ItemUtils.getCustomItem(Material.ENDER_CHEST, 1, "§eSeu Estoque", Arrays.asList("§7Clique aqui para ver", "§7seu estoque.")), e -> {StockGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
         gui.setMainButtom(ItemUtils.getCustomItem(Material.COMMAND, 1, "§2Anuncios do Servidor", Arrays.asList("§7Clique aqui para ver", "§7os anuncios globais.", "§f", "§7Seu dinheiro: §a" + Main.eco.getBalance(p))), e -> {GlobalGUI.openGui((Player)e.getWhoClicked()); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
 

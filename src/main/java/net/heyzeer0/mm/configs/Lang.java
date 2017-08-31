@@ -10,6 +10,9 @@ import net.heyzeer0.mm.interfaces.annotation.LangHelper;
 public class Lang {
 
 
+    public static String market_gui_global_name = "MagiMarket - Anuncios Globais";
+    public static String market_gui_server_name = "MagiMarket - Anuncios Servidor";
+    public static String market_gui_stock_name = "MagiMarket - Seu Estoque";
     public static String command_list_format = " §7-§e %s §7=§a %s";
     public static String command_no_permission = "§cVocê não possui permissão para realizar este comando.";
     public static String command_help_description = "Lista todos os comandos.";
@@ -19,7 +22,8 @@ public class Lang {
     public static String command_config_success = "§e> Configuração recarregada com sucesso.";
     public static String command_config_success_warn = "§7§o(alterações como comando principal requerem recarregamento do plugin)";
     public static String command_config_error = "§cUm erro ocorreu ao recarregar a configuração, veja a console para mais detalhes.";
-    public static String command_config_maincfg_description = "Configurações gerais e lang";
+    public static String command_config_maincfg_description = "Configurações gerais";
+    public static String command_config_lang_description = "Mensagens em geral";
     public static String command_create_description = "Cria um novo anuncio com o item na sua mão";
     public static String command_create_notenought_parameters = "§cUse: /%s create [quantidade] [preço]";
     public static String command_create_not_holding_item = "§cVocê precisa estar segurando um item!";

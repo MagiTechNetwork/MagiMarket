@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.beans.ConstructorProperties;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -96,11 +97,13 @@ public class MarketAnnounce {
         if(!server) {
             stock-=amount;
             Main.eco.depositPlayer(Bukkit.getOfflinePlayer(getOwner()), price);
+            Main.getData().db().getUserProfile(getOwner()).addBankStatement("§2§lD §7- §e" + p.getName() + " §7-§a +" + price + " §7|§e " + Main.dateFormat.format(new Date()));
         }
         ItemStack item = stack.getItemStack().clone();
         item.setAmount(amount);
         p.getInventory().addItem(item);
         Main.eco.withdrawPlayer(p, price);
+        Main.getData().db().getUserProfile(p).addBankStatement("§4§lS §7- §e" + (server ? "SERVER" : Bukkit.getOfflinePlayer(getOwner()).getName()) + " §7-§c -" + price + " §7|§e " + Main.dateFormat.format(new Date()));
         if(stock < amount) {
             onmarket = false;
         }
@@ -129,6 +132,7 @@ public class MarketAnnounce {
             }
         }
 
+        Main.getData().db().getUserProfile(p).addBankStatement("§2§lD §7- §e" + (server ? "SERVER" : Bukkit.getOfflinePlayer(getOwner()).getName()) + " §7-§a +" + price + " §7|§e " + Main.dateFormat.format(new Date()));
         Main.eco.depositPlayer(p, money);
 
         if(!server) {

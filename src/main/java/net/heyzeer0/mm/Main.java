@@ -16,6 +16,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,6 +36,7 @@ public class Main extends JavaPlugin {
     public static boolean cauldron = false;
 
     public static ArrayList<Material> materials = new ArrayList<>();
+    public static DateFormat dateFormat = new SimpleDateFormat("hh:mm dd/MM");
 
     public void onEnable() {
         main = this;

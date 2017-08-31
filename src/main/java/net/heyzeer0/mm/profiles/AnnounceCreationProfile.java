@@ -70,7 +70,7 @@ public class AnnounceCreationProfile {
                 }
                 p.sendMessage("§eValor escolhido: §f" + price);
 
-                ChatUtils.waitForResponse(p, "§aDigite no chat a quantitade que deseja anunciar", (e2, l2) -> {
+                ChatUtils.waitForResponse(p, "§aDigite no chat a quantidade que deseja anunciar", (e2, l2) -> {
                     try{
                         Integer value = Integer.valueOf(l2.replace(".", "").replace(",", ""));
 

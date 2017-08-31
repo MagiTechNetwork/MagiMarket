@@ -61,6 +61,11 @@ public class DatabaseManager {
         return data != null ? data : new UserProfile(p);
     }
 
+    public UserProfile getUserProfile(UUID p) {
+        UserProfile data = users.getOrDefault(p, null);
+        return data;
+    }
+
     public MarketProfile getServerMarket(String name) {
         MarketProfile data = markets.getOrDefault(name, null);
         return data != null ? data : new MarketProfile(name);
