@@ -98,9 +98,7 @@ public class MarketGUI {
         if(e.getCurrentItem() == null) {
             return;
         }
-        if(!e.getClickedInventory().getTitle().equalsIgnoreCase(e.getView().getTopInventory().getTitle())) {
-            return;
-        }
+        if(e.getClickedInventory() != e.getView().getTopInventory()) return;
         e.setCancelled(true);
         if(e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().hasDisplayName() && e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§aPróxima Página")) {
             page++;

@@ -16,8 +16,8 @@ import java.util.UUID;
  */
 public class MarketManager implements Listener {
 
-    public static HashMap<UUID, MarketGUI> guis = new HashMap<>();
-    public static ArrayList<UUID> change = new ArrayList<>();
+    private static HashMap<UUID, MarketGUI> guis = new HashMap<>();
+    private static ArrayList<UUID> change = new ArrayList<>();
 
     public static void openGui(Player p, MarketGUI g) {
         if(guis.containsKey(p.getUniqueId())) {

@@ -30,9 +30,9 @@ public class MarketAnnounce {
     UUID owner;
 
     boolean onmarket;
-    Integer stock = 0;
+    Integer stock;
 
-    long creation = System.currentTimeMillis();
+    long creation;
 
     @ConstructorProperties({"amount", "stack", "price", "owner", "server", "sell", "stock", "creation", "onmarket"})
     public MarketAnnounce(Integer amount, WrappedStack stack, Integer price, UUID owner, boolean server, boolean sell, Integer stock, long creation, boolean onmarket) {
@@ -63,8 +63,8 @@ public class MarketAnnounce {
     public boolean addStock(InventoryClickEvent e) {
         if(e.getCursor().isSimilar(stack.getItemStack())) {
             stock += e.getCursor().getAmount();
-            e.setCursor(null);
-            ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.BURP, 4f, 4f);
+            e.getView().setCursor(null);
+            ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_PLAYER_BURP, 4f, 4f);
         }
         return false;
     }
@@ -75,7 +75,7 @@ public class MarketAnnounce {
             Integer totake = stock > stack.getItemStack().getMaxStackSize() ? stack.getItemStack().getMaxStackSize() : stock;
             ItemStack x = stack.getItemStack().clone();
             x.setAmount(totake);
-            e.setCursor(x);
+            e.getView().setCursor(x);
             stock-=totake;
         }
     }

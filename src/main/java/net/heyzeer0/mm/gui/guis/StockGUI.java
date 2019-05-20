@@ -35,8 +35,8 @@ public class StockGUI {
         //p.closeInventory();
 
         MarketGUI gui = new MarketGUI(Lang.market_gui_stock_name);
-        gui.setLeftCorner(ItemUtils.getCustomItem(Material.CHEST, 1, "§eAnuncios do servidor", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.")), e -> {GlobalGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
-        gui.setMainButtom(ItemUtils.getCustomItem(Material.GRASS, 1, "§2Mostrando seus anuncios", Arrays.asList("§7Clique aqui para fechar", "§7esta janela.", "§f", "§7Seu dinheiro: §a" + Main.eco.getBalance(p))), e -> {e.getWhoClicked().closeInventory();});
+        gui.setLeftCorner(ItemUtils.getCustomItem(Material.CHEST, 1, "§eAnuncios do servidor", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.")), e -> {GlobalGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4f, 4f);});
+        gui.setMainButtom(ItemUtils.getCustomItem(Material.GRASS_BLOCK, 1, "§2Mostrando seus anuncios", Arrays.asList("§7Clique aqui para fechar", "§7esta janela.", "§f", "§7Seu dinheiro: §a" + Main.numberFormat.format(Main.eco.getBalance(p)))), e -> {e.getWhoClicked().closeInventory();});
 
         UserProfile pr = Main.getData().db.getUserProfile(p);
 
@@ -112,7 +112,7 @@ public class StockGUI {
         }
 
         for(int slot = 0; slot < ( (p.hasPermission("magimarket.user.premium") ? MainConfig.max_premium_stock : MainConfig.max_user_stock) - pr.getAnnounceList().size()); slot++) {
-            gui.addItem(ItemUtils.getCustomItem(Material.STAINED_GLASS_PANE, 1, "§aSlot livre", Arrays.asList("§7Arraste um item até aqui", "§7para adiciona-lo ao seu estoque", "§8Id: " + slot), (short)7), e -> {
+            gui.addItem(ItemUtils.getCustomItem(Material.GREEN_STAINED_GLASS_PANE, 1, "§aSlot livre", Arrays.asList("§7Arraste um item até aqui", "§7para adiciona-lo ao seu estoque", "§8Id: " + slot)), e -> {
                 removeAnnounce(gui, p, e);
             });
         }
@@ -170,7 +170,7 @@ public class StockGUI {
                         return;
                     }
                     if(lore.get(5).equalsIgnoreCase("§e<clique direito novamente para desativar>")) {
-                        ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.VILLAGER_DEATH, 4f, 4f);
+                        ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_VILLAGER_DEATH, 4f, 4f);
                         Main.getData().db().getServerMarket("global").removeMarketAnnounce(ap.getId());
 
                         MarketAnnounce a = ap.getAnnounce();
@@ -194,13 +194,13 @@ public class StockGUI {
                 if(e.getCursor().getType() == Material.AIR && lore.size() == 5 && !i.isOnmarket()) {
                     i.removeStock(e);
                     if(i.getStock() <= 0) {
-                        e.getInventory().setItem(e.getSlot(), ItemUtils.getCustomItem(Material.STAINED_GLASS_PANE, 1, "§aSlot livre", Arrays.asList("§7Arraste um item até aqui", "§7para adiciona-lo ao seu estoque", "§8Id: " + e.getSlot()), (short)7));
-                        g.replaceClick(e.getSlot(), ItemUtils.getCustomItem(Material.STAINED_GLASS_PANE, 1, "§aSlot livre", Arrays.asList("§7Arraste um item até aqui", "§7para adiciona-lo ao seu estoque", "§8Id: " + e.getSlot()), (short)7), ev -> {
+                        e.getInventory().setItem(e.getSlot(), ItemUtils.getCustomItem(Material.GREEN_STAINED_GLASS_PANE, 1, "§aSlot livre", Arrays.asList("§7Arraste um item até aqui", "§7para adiciona-lo ao seu estoque", "§8Id: " + e.getSlot())));
+                        g.replaceClick(e.getSlot(), ItemUtils.getCustomItem(Material.GREEN_STAINED_GLASS_PANE, 1, "§aSlot livre", Arrays.asList("§7Arraste um item até aqui", "§7para adiciona-lo ao seu estoque", "§8Id: " + e.getSlot())), ev -> {
                             removeAnnounce(g, p, ev);
                         });
                         Main.getData().db().getUserProfile(p).removeMarketAnnounce(ap.getId());
                         Main.getData().db().getAnnounce(ap.getId()).deleteAsync();
-                        p.playSound(p.getLocation(), Sound.VILLAGER_NO, 4f, 4f);
+                        p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 4f, 4f);
                         return;
                     }
 
@@ -229,7 +229,7 @@ public class StockGUI {
                             return;
                         }
 
-                        p.playSound(p.getLocation(), Sound.VILLAGER_YES, 4f, 4f);
+                        p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_YES, 4f, 4f);
 
                         MarketAnnounce i = new MarketAnnounce(click.getAmount(), new WrappedStack(click), 0, p.getUniqueId(), false, false, click.getAmount(), System.currentTimeMillis(), false);
                         AnnounceProfile pf = new AnnounceProfile(i);

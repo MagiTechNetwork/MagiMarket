@@ -15,8 +15,8 @@ import java.util.UUID;
  */
 public class ChatUtils implements Listener {
 
-    public static Map<UUID, Long> timeleft = new HashMap<>();
-    public static Map<UUID, ChatListener> users = new HashMap<>();
+    private static Map<UUID, Long> timeleft = new HashMap<>();
+    private static Map<UUID, ChatListener> users = new HashMap<>();
 
     public static void waitForResponse(Player p, String default_msg, ChatListener response) {
         p.sendMessage(default_msg);

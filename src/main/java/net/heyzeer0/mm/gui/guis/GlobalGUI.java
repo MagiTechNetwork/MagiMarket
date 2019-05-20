@@ -29,8 +29,8 @@ public class GlobalGUI {
         //p.closeInventory();
 
         MarketGUI gui = new MarketGUI(Lang.market_gui_global_name);
-        gui.setLeftCorner(ItemUtils.getCustomItem(Material.ENDER_CHEST, 1, "§eSeu Estoque", Arrays.asList("§7Clique aqui para ver", "§7seu estoque.")), e -> {StockGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
-        gui.setMainButtom(ItemUtils.getCustomItem(Material.GRASS, 1, "§2Anuncios Globais", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.", "§f", "§7Seu dinheiro: §a" + Main.eco.getBalance(p))), e -> {ServerGUI.openGui((Player)e.getWhoClicked()); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ORB_PICKUP, 4f, 4f);});
+        gui.setLeftCorner(ItemUtils.getCustomItem(Material.ENDER_CHEST, 1, "§eSeu Estoque", Arrays.asList("§7Clique aqui para ver", "§7seu estoque.")), e -> {StockGUI.openGui(p); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4f, 4f);});
+        gui.setMainButtom(ItemUtils.getCustomItem(Material.GRASS_BLOCK, 1, "§2Anuncios Globais", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.", "§f", "§7Seu dinheiro: §a" + Main.numberFormat.format(Main.eco.getBalance(p)))), e -> {ServerGUI.openGui((Player)e.getWhoClicked()); ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 4f, 4f);});
 
         MarketProfile pr = Main.getData().db.getServerMarket("global");
         if(pr.getAnnounceList().size() >= 1) {
@@ -61,7 +61,7 @@ public class GlobalGUI {
                                     return;
                                 }
                                 if(lore.get(5).equalsIgnoreCase("§e<clique direito novamente para desativar>")) {
-                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.VILLAGER_DEATH, 4f, 4f);
+                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_VILLAGER_DEATH, 4f, 4f);
                                     Main.getData().db().getServerMarket("global").removeMarketAnnounce(ap.getId());
                                     gui.replaceClick(e.getSlot(), null, ev -> {});
                                     MarketAnnounce a = ap.getAnnounce();
@@ -94,7 +94,7 @@ public class GlobalGUI {
                                     y.setLore(lore);
                                     x.setItemMeta(y);
                                     e.getInventory().setItem(e.getSlot(), x);
-                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.IRONGOLEM_HIT, 4f, 4f);
+                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_IRON_GOLEM_HURT, 4f, 4f);
                                     return;
                                 }
                                 if(p.getInventory().firstEmpty() == -1) {
@@ -104,7 +104,7 @@ public class GlobalGUI {
                                     y.setLore(lore);
                                     x.setItemMeta(y);
                                     e.getInventory().setItem(e.getSlot(), x);
-                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.IRONGOLEM_HIT, 4f, 4f);
+                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_IRON_GOLEM_HURT, 4f, 4f);
                                     return;
                                 }
 
@@ -117,7 +117,7 @@ public class GlobalGUI {
                                     y.setLore(lore);
                                     x.setItemMeta(y);
                                     e.getInventory().setItem(e.getSlot(), x);
-                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.IRONGOLEM_HIT, 4f, 4f);
+                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_IRON_GOLEM_HURT, 4f, 4f);
                                     return;
                                 }
                                 p.sendMessage("§aO item comprado foi colocado em seu inventário.");
@@ -134,11 +134,11 @@ public class GlobalGUI {
                                     e.getInventory().setItem(e.getSlot(), x);
                                 }
 
-                                e.getInventory().setItem(49, ItemUtils.getCustomItem(Material.GRASS, 1, "§2Anuncios Globais", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.", "§f", "§7Seu dinheiro: §a" + Main.eco.getBalance(p))));
+                                e.getInventory().setItem(49, ItemUtils.getCustomItem(Material.GRASS_BLOCK, 1, "§2Anuncios Globais", Arrays.asList("§7Clique aqui para ver", "§7os anuncios do servidor.", "§f", "§7Seu dinheiro: §a" + Main.eco.getBalance(p))));
 
                                 Main.getData().db().getAnnounce(ap.getId()).updateChanges(i2);
 
-                                ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.VILLAGER_YES, 4f, 4f);
+                                ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_VILLAGER_YES, 4f, 4f);
                             }
                         }
                         return;

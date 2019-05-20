@@ -8,6 +8,7 @@ import net.heyzeer0.mm.interfaces.CommandExec;
 import net.heyzeer0.mm.interfaces.annotation.Command;
 import net.heyzeer0.mm.profiles.MarketAnnounce;
 import net.heyzeer0.mm.profiles.WrappedStack;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -24,7 +25,7 @@ public class CreateServerCommand implements CommandExec {
             m.sendMessage(String.format(Lang.command_createserver_notenought_parameters, MainConfig.main_command_prefix));
             return;
         }
-        if(m.getItemInHand() == null) {
+        if(m.getInventory().getItemInMainHand().getType() == Material.AIR) {
             m.sendMessage(Lang.command_create_not_holding_item);
             return;
         }
@@ -32,7 +33,7 @@ public class CreateServerCommand implements CommandExec {
         try{
             Integer amount = Integer.valueOf(args[1]);
             Integer price = Integer.valueOf(args[2]);
-            Boolean vender = Boolean.valueOf(args[3]);
+            boolean sell = Boolean.valueOf(args[3]);
 
             if(amount > m.getItemInHand().getMaxStackSize()) {
                 m.sendMessage(Lang.command_create_item_stacklimit);
@@ -46,20 +47,20 @@ public class CreateServerCommand implements CommandExec {
                 m.sendMessage(Lang.command_create_amount_morethan0);
                 return;
             }
-            if(m.getItemInHand().getAmount() < amount) {
+            if(m.getInventory().getItemInMainHand().getAmount() < amount) {
                 m.sendMessage(Lang.command_create_notenought_items);
                 return;
             }
-            ItemStack x = m.getItemInHand().clone();
-            if(m.getItemInHand().getAmount() == 1) {
-                m.setItemInHand(null);
+            ItemStack x = m.getInventory().getItemInMainHand().clone();
+            if(m.getInventory().getItemInMainHand().getAmount() == 1) {
+                m.getInventory().setItemInMainHand(null);
             }else{
-                m.getItemInHand().setAmount(m.getItemInHand().getAmount() - amount);
+                m.getInventory().getItemInMainHand().setAmount(m.getInventory().getItemInMainHand().getAmount() - amount);
             }
 
             x.setAmount(amount);
 
-            MarketAnnounce announce = new MarketAnnounce(amount, new WrappedStack(x), price, m.getUniqueId(), true, vender, amount, System.currentTimeMillis(), true);
+            MarketAnnounce announce = new MarketAnnounce(amount, new WrappedStack(x), price, m.getUniqueId(), true, sell, amount, System.currentTimeMillis(), true);
             AnnounceProfile ann = new AnnounceProfile(announce);
             ann.save();
 

@@ -22,18 +22,6 @@ public class ItemUtils {
         return x;
     }
 
-    public static ItemStack getCustomItem(Material m, Integer amount, String name, List<String> lore, short durability) {
-        ItemStack x = new ItemStack(m, amount);
-        ItemMeta y = x.getItemMeta();
-        y.setDisplayName(name);
-        y.setLore(lore);
-        x.setItemMeta(y);
-
-        x.setDurability(durability);
-
-        return x;
-    }
-
     public static ItemStack getCustomItem(Material m, Integer amount, String name) {
         ItemStack x = new ItemStack(m, amount);
         ItemMeta y = x.getItemMeta();

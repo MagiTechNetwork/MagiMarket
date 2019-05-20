@@ -25,7 +25,7 @@ public class CreateCommand implements CommandExec {
             m.sendMessage(String.format(Lang.command_create_notenought_parameters, MainConfig.main_command_prefix));
             return;
         }
-        if(m.getItemInHand() == null || m.getItemInHand().getType() == Material.AIR) {
+        if(m.getInventory().getItemInMainHand().getType() == Material.AIR) {
             m.sendMessage(Lang.command_create_not_holding_item);
             return;
         }
@@ -52,7 +52,7 @@ public class CreateCommand implements CommandExec {
             Integer amount = Integer.valueOf(args[1]);
             Integer price = Integer.valueOf(args[2]);
 
-            if(amount > m.getItemInHand().getMaxStackSize()) {
+            if(amount > m.getInventory().getItemInMainHand().getMaxStackSize()) {
                 m.sendMessage(Lang.command_create_item_stacklimit);
                 return;
             }

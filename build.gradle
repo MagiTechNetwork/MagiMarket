@@ -11,6 +11,8 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    mavenLocal()
+    maven { url "http://repo.dmulloy2.net/nexus/repository/public/" }
 }
 
 dependencies {
@@ -18,6 +20,8 @@ dependencies {
     compile 'com.rethinkdb:rethinkdb-driver:2.3.3'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.0.pr1'
     compile 'org.json:json:20170516'
+    compileOnly 'org.spigotmc:spigot:1.14.1-R0.1-SNAPSHOT'
+    compileOnly 'com.comphenix.protocol:ProtocolLib:4.4.0'
     compileOnly 'org.projectlombok:lombok:1.16.16'
 }
 

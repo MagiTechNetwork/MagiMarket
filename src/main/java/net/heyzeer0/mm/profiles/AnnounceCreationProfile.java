@@ -2,6 +2,7 @@ package net.heyzeer0.mm.profiles;
 
 import net.heyzeer0.mm.Main;
 import net.heyzeer0.mm.database.entities.AnnounceProfile;
+import net.heyzeer0.mm.gui.guis.GlobalGUI;
 import net.heyzeer0.mm.utils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

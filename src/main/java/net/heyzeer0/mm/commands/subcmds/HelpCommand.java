@@ -19,7 +19,6 @@ public class HelpCommand implements CommandExec {
     @Override
     public void runCommand(Player m, String[] args) {
         m.sendMessage(Lang.command_help_prefix);
-        System.out.println(args);
         for(String pr : CommandManager.cmds.keySet()) {
             CommandProfile cmd = CommandManager.cmds.get(pr);
             if(m.hasPermission(cmd.getAnnotation().permission()))

@@ -17,9 +17,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -36,7 +36,8 @@ public class Main extends JavaPlugin {
     public static boolean cauldron = false;
 
     public static ArrayList<Material> materials = new ArrayList<>();
-    public static DateFormat dateFormat = new SimpleDateFormat("hh:mm dd/MM");
+    public static final DateFormat dateFormat = new SimpleDateFormat("hh:mm dd/MM");
+    public static final DecimalFormat numberFormat = new DecimalFormat("###.##");
 
     public void onEnable() {
         main = this;
@@ -126,16 +127,11 @@ public class Main extends JavaPlugin {
         return data;
     }
 
-    private static boolean isCauldron()
-    {
-        try
-        {
-            Class.forName("net.minecraftforge.common.ForgeHooks");
-        }
-        catch(Exception ignored)
-        {
-            return false;
-        }
+    public DecimalFormat getNumberFormat() {
+        return numberFormat;
+    }
+
+    private static boolean isCauldron() {
         return true;
     }
 

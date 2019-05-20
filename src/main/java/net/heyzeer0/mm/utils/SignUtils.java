@@ -6,7 +6,9 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
@@ -51,6 +53,7 @@ public class SignUtils {
                         if (response != null) {
                             event.setCancelled(true);
                             Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> response.onSignDone(player, lines));
+                            destroy();
                         }
                     }
                 });
@@ -66,8 +69,8 @@ public class SignUtils {
             z = player.getLocation().getBlockZ();
 
             PacketContainer packet53 = protocolManager.createPacket(PacketType.Play.Server.BLOCK_CHANGE);
-            packet53.getIntegers().write(0, x).write(1, y).write(2, z);
-            packet53.getBlocks().write(0, org.bukkit.Material.SIGN_POST);
+            packet53.getBlockPositionModifier().write(0, new BlockPosition(x, y, z));
+            packet53.getBlocks().write(0, Material.OAK_SIGN);
             packets.add(packet53);
 
             PacketContainer packet130 = protocolManager.createPacket(PacketType.Play.Server.UPDATE_SIGN);
@@ -82,7 +85,7 @@ public class SignUtils {
 
         if (defaultText != null) {
             PacketContainer packet53 = protocolManager.createPacket(PacketType.Play.Server.BLOCK_CHANGE);
-            packet53.getIntegers().write(0, x).write(1, 0).write(2, z);
+            packet53.getBlockPositionModifier().write(0, new BlockPosition(x, y, z));
             packet53.getBlocks().write(0, org.bukkit.Material.BEDROCK);
             packets.add(packet53);
         }
@@ -99,7 +102,7 @@ public class SignUtils {
 
     }
 
-    public void destroy() {
+    private void destroy() {
         protocolManager.removePacketListener(packetListener);
         listeners.clear();
         signLocations.clear();

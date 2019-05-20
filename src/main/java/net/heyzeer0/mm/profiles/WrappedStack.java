@@ -2,11 +2,11 @@ package net.heyzeer0.mm.profiles;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
-import net.minecraft.server.v1_7_R4.NBTCompressedStreamTools;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.server.v1_7_R4.NBTTagList;
+import net.minecraft.server.v1_14_R1.NBTCompressedStreamTools;
+import net.minecraft.server.v1_14_R1.NBTTagCompound;
+import net.minecraft.server.v1_14_R1.NBTTagList;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_14_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.beans.ConstructorProperties;
@@ -29,8 +29,13 @@ public class WrappedStack {
     @ConstructorProperties({"material", "base64"})
     public WrappedStack(String material, String base64) {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(new BigInteger(base64, 32).toByteArray());
-        NBTTagCompound nbtTagCompoundRoot = NBTCompressedStreamTools.a(new DataInputStream(inputStream));
-        net.minecraft.server.v1_7_R4.ItemStack nmsItem = net.minecraft.server.v1_7_R4.ItemStack.createStack(nbtTagCompoundRoot);
+        NBTTagCompound nbtTagCompoundRoot = null;
+        try {
+            nbtTagCompoundRoot = NBTCompressedStreamTools.a(new DataInputStream(inputStream));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        net.minecraft.server.v1_14_R1.ItemStack nmsItem = net.minecraft.server.v1_14_R1.ItemStack.a(nbtTagCompoundRoot);
         main = CraftItemStack.asBukkitCopy(nmsItem);
         main.setType(Material.valueOf(material));
 
@@ -46,10 +51,14 @@ public class WrappedStack {
         DataOutputStream dataOutput = new DataOutputStream(outputStream);
         NBTTagList nbtTagListItems = new NBTTagList();
         NBTTagCompound nbtTagCompoundItem = new NBTTagCompound();
-        net.minecraft.server.v1_7_R4.ItemStack nmsItem = CraftItemStack.asNMSCopy(convert);
+        net.minecraft.server.v1_14_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(convert);
         nmsItem.save(nbtTagCompoundItem);
         nbtTagListItems.add(nbtTagCompoundItem);
-        NBTCompressedStreamTools.a(nbtTagCompoundItem, (DataOutput) dataOutput);
+        try {
+            NBTCompressedStreamTools.a(nbtTagCompoundItem, (DataOutput) dataOutput);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         base64 = new BigInteger(1, outputStream.toByteArray()).toString(32);
     }
 
