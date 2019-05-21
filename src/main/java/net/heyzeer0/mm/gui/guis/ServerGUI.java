@@ -13,6 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -193,7 +194,7 @@ public class ServerGUI {
                             }
                         }
                     }
-                    if(e.getClick() == ClickType.LEFT) {
+                    if(e.getClick() == ClickType.LEFT || e.getClick() == ClickType.SHIFT_LEFT) {
                         if(e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().hasLore()) {
                             List<String> lore = e.getCurrentItem().getItemMeta().getLore();
                             //COMPRAR
@@ -228,8 +229,7 @@ public class ServerGUI {
                                     ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_IRON_GOLEM_HURT, 4f, 4f);
                                     return;
                                 }
-
-                                if(!i.buyItem(p)) {
+                                if(!i.buyItem(p, e.isShiftClick())) {
                                     lore.set(3,  "§c<ocorreu um erro>");
                                     ItemStack x = e.getCurrentItem();
                                     ItemMeta y = x.getItemMeta();

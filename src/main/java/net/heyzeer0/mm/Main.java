@@ -8,8 +8,8 @@ import net.heyzeer0.mm.database.MarketData;
 import net.heyzeer0.mm.gui.MarketManager;
 import net.heyzeer0.mm.managers.ConfigManager;
 import net.heyzeer0.mm.utils.ChatUtils;
-import net.heyzeer0.mm.utils.SignUtils;
 import net.milkbowl.vault.economy.Economy;
+import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.plugin.PluginManager;
@@ -31,7 +31,7 @@ public class Main extends JavaPlugin {
     public static Main main;
     public static Economy eco;
     private static MarketData data;
-    public static SignUtils sign;
+    private static AnvilGUI anvilGUI;
 
     public static boolean cauldron = false;
 
@@ -107,9 +107,7 @@ public class Main extends JavaPlugin {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new MarketManager(), this);
 
-        if(!isCauldron()) {
-            sign = new SignUtils(this);
-        }else{
+        if(isCauldron()) {
             getLogger().log(Level.SEVERE, "This server is running Cauldron, Sign system will be replaced with Chat system.");
             pm.registerEvents(new ChatUtils(), this);
             cauldron = true;
@@ -132,6 +130,12 @@ public class Main extends JavaPlugin {
     }
 
     private static boolean isCauldron() {
+        try {
+            Class.forName("net.minecraftforge.common.ForgeHooks");
+        } catch (Exception ignored) {
+            return true;
+        }
+
         return true;
     }
 

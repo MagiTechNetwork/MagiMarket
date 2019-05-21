@@ -48,6 +48,11 @@ public class MarketAnnounce {
     }
 
     @JsonIgnore
+    public double perItem() {
+        return price / amount;
+    }
+
+    @JsonIgnore
     public void setOnMarket(boolean value) {
         onmarket = value;
     }
@@ -81,7 +86,7 @@ public class MarketAnnounce {
     }
 
     @JsonIgnore
-    public boolean buyItem(Player p) {
+    public boolean buyItem(Player p, boolean fullStack) {
         if(sell) {
             return false;
         }
@@ -91,6 +96,10 @@ public class MarketAnnounce {
         if(p.getInventory().firstEmpty() == -1) {
             return false;
         }
+
+        int amount = fullStack ? 64 : stock;
+        double price = perItem() * amount;
+
         if(!server && stock < amount) {
             return false;
         }
@@ -119,7 +128,6 @@ public class MarketAnnounce {
             return 0;
         }
 
-        double peritem = price / amount;
         double money = 0;
 
         for(ItemStack i : p.getInventory().getContents()) {
@@ -128,11 +136,11 @@ public class MarketAnnounce {
             }
             if(i.isSimilar(stack.getItemStack())) {
                 p.getInventory().remove(i);
-                money += i.getAmount() * peritem;
+                money += i.getAmount() * perItem();
             }
         }
 
-        Main.getData().db().getUserProfile(p).addBankStatement("§2§lD §7- §e" + (server ? "SERVER" : Bukkit.getOfflinePlayer(getOwner()).getName()) + " §7-§a +" + price + " §7|§e " + Main.dateFormat.format(new Date()));
+        Main.getData().db().getUserProfile(p).addBankStatement("§2§lD §7- §e" + (server ? "SERVER" : Bukkit.getOfflinePlayer(getOwner()).getName()) + " §7-§a +" + money + " §7|§e " + Main.dateFormat.format(new Date()));
         Main.eco.depositPlayer(p, money);
 
         if(!server) {

@@ -4,6 +4,8 @@ import net.heyzeer0.mm.Main;
 import net.heyzeer0.mm.database.entities.AnnounceProfile;
 import net.heyzeer0.mm.gui.guis.GlobalGUI;
 import net.heyzeer0.mm.utils.ChatUtils;
+import net.wesjd.anvilgui.AnvilGUI;
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -13,8 +15,10 @@ import org.bukkit.entity.Player;
  */
 public class AnnounceCreationProfile {
 
-    AnnounceProfile ex;
-    Player p;
+    private AnnounceProfile ex;
+    private Player p;
+
+    private int price = -1;
 
     public AnnounceCreationProfile(Player p , AnnounceProfile ex) {
         this.ex = ex;
@@ -25,39 +29,33 @@ public class AnnounceCreationProfile {
         p.closeInventory();
         MarketAnnounce i = ex.getAnnounce();
 
-        if(Main.sign != null) {
-            Main.sign.open(p, new String[] {"", "^^^^", "Digite acima o", "preço"}, (p, l) -> {
-                try{
-                    Integer price = (Integer.valueOf(l[0].replace(".", "").replace(",", "")));
+        if(!Main.cauldron) {
+            new AnvilGUI(Main.main, p, "Insira o preço", (player, msg) -> {
 
-                    if(price <= 0) {
-                        p.sendMessage("§cO preço tem que ser superior que zero!");
-                        return;
-                    }
+                if(price != -1) {
+                    if(!NumberUtils.isNumber(msg.replace(".", "").replace(",", ""))) return "Quantidade Invalida";
+                    Integer value = Integer.valueOf(msg.replace(".", "").replace(",", ""));
+
+                    if(i.getStock() < value) return "Sem estoque";
 
                     p.sendMessage("§eValor escolhido: §f" + price);
+                    p.sendMessage("§eQuantidade escolhida: §f" + value);
+                    p.sendMessage("§aAnuncio publicado com sucesso!");
 
-                    Main.sign.open(p, new String[] {"", "^^^^", "Digite acima a", "quantidade"}, (p2, l2) -> {
-                        try{
-                            Integer value = Integer.valueOf(l2[0].replace(".", "").replace(",", ""));
-
-                            if(i.getStock() < value) {
-                                p.sendMessage("§cVocê não possui estoque suficiente!");
-                                return;
-                            }
-                            p.sendMessage("§eValor escolhido: §f" + value);
-                            p.sendMessage("§aAnuncio publicado com sucesso!");
-                            i.setAmountAndPriceAndMarket(value, price, true);
-                            Main.getData().db().getAnnounce(ex.getId()).updateChanges(i);
-                            Main.getData().db().getServerMarket("global").addMarketAnnounce(ex.getId());
-
-                        }catch (Exception ex) {
-                            p2.sendMessage("§cA quantidade inserida é invalida, tente novamente.");
-                        }
-                    });
-                }catch (Exception ex) {
-                    p.sendMessage("§cO preço inserido é invalido, tente novamente.");
+                    i.setAmountAndPriceAndMarket(value, price, true);
+                    Main.getData().db().getAnnounce(ex.getId()).updateChanges(i);
+                    Main.getData().db().getServerMarket("global").addMarketAnnounce(ex.getId());
+                    return null;
                 }
+
+                if(!NumberUtils.isNumber(msg.replace(".", "").replace(",", ""))) return "Preço Invalido";
+
+                Integer price = Integer.valueOf(msg.replace(".", "").replace(",", ""));
+                if(price <= 0) return "Preço Invalido";
+
+                this.price = price;
+
+                return "Insira a quantidade";
             });
             return;
         }

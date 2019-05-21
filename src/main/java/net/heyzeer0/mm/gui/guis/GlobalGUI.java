@@ -13,6 +13,8 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -74,7 +76,7 @@ public class GlobalGUI {
                             }
                         }
                     }
-                    if(e.getClick() == ClickType.LEFT) {
+                    if(e.getClick() == ClickType.LEFT || e.getClick() == ClickType.SHIFT_LEFT) {
                         if(e.getCurrentItem().hasItemMeta() && e.getCurrentItem().getItemMeta().hasLore()) {
                             List<String> lore = e.getCurrentItem().getItemMeta().getLore();
                             if(lore.get(4).equalsIgnoreCase("§a<clique esquerdo para comprar>")) {
@@ -109,8 +111,18 @@ public class GlobalGUI {
                                 }
 
                                 MarketAnnounce i2 = Main.getData().db().getAnnounce(ap.getId()).getAnnounce();
+                                if(e.isShiftClick() && i2.getStock() < 64) {
+                                    lore.set(4,  "§c<sem estoque>");
+                                    ItemStack x = e.getCurrentItem();
+                                    ItemMeta y = x.getItemMeta();
+                                    y.setLore(lore);
+                                    x.setItemMeta(y);
+                                    e.getInventory().setItem(e.getSlot(), x);
+                                    ((Player)e.getWhoClicked()).playSound(e.getWhoClicked().getLocation(), Sound.ENTITY_IRON_GOLEM_HURT, 4f, 4f);
+                                    return;
+                                }
 
-                                if(!i2.buyItem(p)) {
+                                if(!i2.buyItem(p, e.isShiftClick())) {
                                     lore.set(4,  "§c<ocorreu um erro>");
                                     ItemStack x = e.getCurrentItem();
                                     ItemMeta y = x.getItemMeta();
