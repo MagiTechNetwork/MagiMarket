@@ -95,7 +95,8 @@ public class MarketGUI {
     }
 
     protected void handleClick(InventoryClickEvent e) {
-        if(e.getCurrentItem() == null) {
+        if(e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
+            e.setCancelled(true);
             return;
         }
         if(e.getClickedInventory() != e.getView().getTopInventory()) return;

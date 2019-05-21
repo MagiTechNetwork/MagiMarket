@@ -23,7 +23,6 @@ import java.util.HashMap;
 public class CommandManager {
 
     public static HashMap<String, CommandProfile> cmds = new HashMap<>();
-    private static String last_command;
 
     public static void registerCommand(CommandExec x) {
         Command ann = x.getClass().getAnnotation(Command.class);
@@ -67,8 +66,6 @@ public class CommandManager {
             comMap.setAccessible(true);
             CommandMap map = (CommandMap) comMap.get(Bukkit.getServer());
             map.register(MainConfig.main_command_prefix, cmd);
-
-            last_command = MainConfig.main_command_prefix;
         }
         catch(Exception ignored) {}
 
